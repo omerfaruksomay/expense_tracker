@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 
-class WelcomePage extends StatefulWidget {
-  const WelcomePage({super.key});
+class SettingsScreen extends StatefulWidget {
+  const SettingsScreen({super.key});
 
   @override
-  State<WelcomePage> createState() => _WelcomePageState();
+  State<SettingsScreen> createState() => _SettingsScreenState();
 }
 
-class _WelcomePageState extends State<WelcomePage> {
-  String appBarText = 'Welcome';
+class _SettingsScreenState extends State<SettingsScreen> {
+  String appBarText = 'Settings';
 
   @override
   Widget build(BuildContext context) {
