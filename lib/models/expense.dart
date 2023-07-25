@@ -58,12 +58,12 @@ const categoryIcons = {
 };
 
 const categoryName = {
-  Category.diger: 'Diğer Harcamalar',
-  Category.ulasim: 'Ulaşım Haracamaları',
-  Category.konut: 'Konut Haracamaları',
-  Category.eglence: 'Eğlence Haracamaları',
-  Category.saglik: 'Sağlık Haracamaları',
-  Category.egitim: 'Eğitim Haracamaları',
+  Category.diger: 'other',
+  Category.ulasim: 'transportation',
+  Category.konut: 'housing',
+  Category.eglence: 'entertainment',
+  Category.saglik: 'health care',
+  Category.egitim: 'education',
 };
 
 //dummy data

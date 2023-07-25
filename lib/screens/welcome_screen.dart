@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '/screens/add_expense.dart';
+
 class WelcomeScreen extends StatefulWidget {
   const WelcomeScreen({super.key});
 
@@ -18,7 +20,13 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Text(welcomeMessage),
-          TextButton(onPressed: () {}, child: Text(buttonText))
+          TextButton(
+              onPressed: () {
+                Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => const AddExpenseScreen(),
+                ));
+              },
+              child: Text(buttonText))
         ],
       ),
     );
