@@ -8,8 +8,6 @@ class FiltersScreen extends StatefulWidget {
 }
 
 class _FiltersScreenState extends State<FiltersScreen> {
-  String appBarText = 'Filters';
-
   @override
   Widget build(BuildContext context) {
     return const Scaffold(

@@ -8,8 +8,6 @@ class DashboardScreen extends StatefulWidget {
 }
 
 class _DashboardScreenState extends State<DashboardScreen> {
-  String appBarText = 'Dashboard';
-
   @override
   Widget build(BuildContext context) {
     return const Scaffold(

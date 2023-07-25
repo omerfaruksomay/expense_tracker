@@ -36,27 +36,32 @@ class _DrawerScreenState extends State<DrawerScreen> {
 
   List screens = [
     {
-      'title': 'Welcome Screen',
+      'title': 'Welcome',
+      'icon': Icons.home,
       'index': 0,
       'widget': WelcomeScreen(key: UniqueKey()),
     },
     {
-      'title': 'Dashboard Screen',
+      'title': 'Dashboard',
+      'icon': Icons.dashboard,
       'index': 1,
       'widget': DashboardScreen(key: UniqueKey()),
     },
     {
-      'title': 'Expenses Screen',
+      'title': 'Expenses',
+      'icon': Icons.attach_money,
       'index': 2,
       'widget': ExpensesScreen(key: UniqueKey()),
     },
     {
-      'title': 'Filters Screen',
+      'title': 'Filters',
+      'icon': Icons.search,
       'index': 3,
       'widget': FiltersScreen(key: UniqueKey()),
     },
     {
-      'title': 'Settings Screen',
+      'title': 'Settings',
+      'icon': Icons.settings,
       'index': 4,
       'widget': SettingsScreen(key: UniqueKey()),
     },
@@ -66,6 +71,7 @@ class _DrawerScreenState extends State<DrawerScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        centerTitle: true,
         title: Text(
           appBarTitle,
         ),
@@ -93,7 +99,7 @@ class _DrawerScreenState extends State<DrawerScreen> {
             ...screens.map((screenObject) {
               return ListTile(
                 selected: _selectedIndex == screenObject['index'],
-                leading: const Icon(Icons.home),
+                leading: Icon(screenObject['icon']),
                 title: Text(screenObject['title']),
                 onTap: () => _onMenuItemClicked(screenObject['index']),
               );
