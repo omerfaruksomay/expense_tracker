@@ -4,14 +4,14 @@ import 'package:hive_flutter/hive_flutter.dart';
 
 import '../models/expense.dart';
 
-class FilterPractise extends StatefulWidget {
-  const FilterPractise({super.key});
+class DateAndCategoryFilter extends StatefulWidget {
+  const DateAndCategoryFilter({super.key});
 
   @override
-  State<FilterPractise> createState() => _FilterPractiseState();
+  State<DateAndCategoryFilter> createState() => _FilterPractiseState();
 }
 
-class _FilterPractiseState extends State<FilterPractise> {
+class _FilterPractiseState extends State<DateAndCategoryFilter> {
   late final Box expenseBox;
   Category _selectedCategory = Category.diger;
   Category? _filteredCategory;

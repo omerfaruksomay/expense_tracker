@@ -1,79 +1,49 @@
 import 'package:expense_tracker/widgets/category_filter.dart';
-import 'package:expense_tracker/widgets/date_filter.dart';
+import 'package:expense_tracker/widgets/name_category_filter.dart';
 import 'package:expense_tracker/widgets/name_filter.dart';
 import 'package:flutter/material.dart';
 
-import 'package:hive_flutter/adapters.dart';
-
-import '../models/expense.dart';
-
-class FiltersScreen extends StatefulWidget {
-  const FiltersScreen({super.key});
+class FilterScreen extends StatefulWidget {
+  const FilterScreen({super.key});
 
   @override
-  State<FiltersScreen> createState() => _FiltersScreenState();
+  State<FilterScreen> createState() => _ToggleFilterState();
 }
 
-class _FiltersScreenState extends State<FiltersScreen> {
-  var _filterIdentifier;
+class _ToggleFilterState extends State<FilterScreen> {
+  final List<Widget> filters = <Widget>[
+    const Text('Category'),
+    const Text('Name'),
+  ];
+
+  final List<bool> _selectedFilters = <bool>[false, false];
 
   @override
   Widget build(BuildContext context) {
-    Widget content = Row();
+    Widget content = const Row();
 
-    if (_filterIdentifier == 'category') {
-      // print(_filterIdentifier);
+    if (_selectedFilters[0] == true && _selectedFilters[1] == false) {
       content = const CategoryFilter();
-    }
-    if (_filterIdentifier == 'name') {
-      content = NameFilter();
-    }
-    if (_filterIdentifier == 'date') {
-      content = DateFilter();
+    } else if (_selectedFilters[0] == false && _selectedFilters[1] == true) {
+      content = const NameFilter();
+    } else if (_selectedFilters[0] == true && _selectedFilters[1] == true) {
+      content = const NameAndCategoryFilter();
     }
 
     return Scaffold(
-      body: Container(
-        margin: const EdgeInsets.only(left: 5),
+      body: Center(
         child: Column(
           children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                SizedBox(
-                  width: 120,
-                  child: FilledButton(
-                    onPressed: () {
-                      setState(() {
-                        _filterIdentifier = 'category';
-                      });
-                    },
-                    child: const Text('Category'),
-                  ),
-                ),
-                SizedBox(
-                  width: 120,
-                  child: FilledButton(
-                    onPressed: () {
-                      setState(() {
-                        _filterIdentifier = 'name';
-                      });
-                    },
-                    child: const Text('Name'),
-                  ),
-                ),
-                SizedBox(
-                  width: 120,
-                  child: FilledButton(
-                    onPressed: () {
-                      setState(() {
-                        _filterIdentifier = 'date';
-                      });
-                    },
-                    child: const Text('Date'),
-                  ),
-                ),
-              ],
+            ToggleButtons(
+              direction: Axis.horizontal,
+              onPressed: (index) {
+                setState(() {
+                  _selectedFilters[index] = !_selectedFilters[index];
+                });
+                print(_selectedFilters[index]);
+              },
+              isSelected: _selectedFilters,
+              children: filters,
             ),
             content,
           ],

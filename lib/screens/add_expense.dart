@@ -40,6 +40,8 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
     setState(() {
       _selectedDate = pickedDate;
     });
+    print(pickedDate);
+    print(DateTime.utc(2023, 07, 21));
   }
 
   _addExpense() async {

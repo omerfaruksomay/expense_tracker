@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 
-import '/screens/filter_prac.dart';
+import 'filters_screen.dart';
+
 import 'dashboard_screen.dart';
 import 'expenses_screen.dart';
-import 'filters_screen.dart';
+
 import 'settings_screen.dart';
 import 'welcome_screen.dart';
 
@@ -58,7 +59,7 @@ class _DrawerScreenState extends State<DrawerScreen> {
       'title': 'Filters',
       'icon': Icons.search,
       'index': 3,
-      'widget': FiltersScreen(key: UniqueKey()),
+      'widget': FilterScreen(key: UniqueKey()),
     },
     {
       'title': 'Settings',
