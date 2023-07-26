@@ -4,20 +4,25 @@ import 'package:hive_flutter/hive_flutter.dart';
 
 import '../models/expense.dart';
 
-class DateAndCategoryFilter extends StatefulWidget {
-  const DateAndCategoryFilter({super.key});
+class AllFilters extends StatefulWidget {
+  const AllFilters({super.key});
 
   @override
-  State<DateAndCategoryFilter> createState() => _FilterPractiseState();
+  State<AllFilters> createState() => _AllFiltersState();
 }
 
-class _FilterPractiseState extends State<DateAndCategoryFilter> {
+class _AllFiltersState extends State<AllFilters> {
   late final Box expenseBox;
-  Category _selectedCategory = Category.diger;
-  Category? _filteredCategory;
+
+  String? expenseName;
+  final TextEditingController _nameContoller = TextEditingController();
 
   DateTime? _selectedDate;
   DateTime? _filteredDate;
+
+  Category _selectedCategory = Category.diger;
+  Category? _filteredCategory;
+
   @override
   void initState() {
     super.initState();
@@ -49,13 +54,6 @@ class _FilterPractiseState extends State<DateAndCategoryFilter> {
     );
   }
 
-  _filterExpense() {
-    setState(() {
-      _filteredDate = _selectedDate;
-      _filteredCategory = _selectedCategory;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return ValueListenableBuilder(
@@ -64,11 +62,13 @@ class _FilterPractiseState extends State<DateAndCategoryFilter> {
         Map<dynamic, dynamic> raw = box.toMap();
         dynamic filteredExpenses;
         filteredExpenses = raw.values
-            .where(
-              (expense) =>
-                  expense.date == _selectedDate &&
-                  expense.category == _filteredCategory,
-            )
+            .where((expense) =>
+                expense.date == _selectedDate &&
+                expense.name
+                    .toString()
+                    .trim()
+                    .toLowerCase()
+                    .contains(expenseName.toString().trim().toLowerCase()))
             .toList();
         if (box.isEmpty) {
           return const Center(
@@ -86,49 +86,69 @@ class _FilterPractiseState extends State<DateAndCategoryFilter> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Text(_selectedDate == null
-                              ? 'No Date Selected'
-                              : formatter.format(_selectedDate!)),
-                          IconButton(
-                            onPressed: _presentDatePicker,
-                            icon: const Icon(Icons.calendar_month),
-                          ),
-                        ],
-                      ),
-                      DropdownButton(
-                        value: _selectedCategory,
-                        items: Category.values
-                            .map(
-                              (category) => DropdownMenuItem(
-                                value: category,
-                                child: Text(
-                                  category.name.toUpperCase(),
+                      Expanded(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Expanded(
+                              child: TextField(
+                                controller: _nameContoller,
+                                decoration: const InputDecoration(
+                                  border: OutlineInputBorder(),
+                                  labelText: 'Expense Name',
                                 ),
                               ),
-                            )
-                            .toList(),
-                        onChanged: (value) {
-                          if (value == null) {
-                            return;
-                          }
-                          setState(() {
-                            _selectedCategory = value;
-                          });
-                        },
+                            ),
+                            SizedBox(width: 10),
+                            DropdownButton(
+                              value: _selectedCategory,
+                              items: Category.values
+                                  .map(
+                                    (category) => DropdownMenuItem(
+                                      value: category,
+                                      child: Text(
+                                        category.name.toUpperCase(),
+                                      ),
+                                    ),
+                                  )
+                                  .toList(),
+                              onChanged: (value) {
+                                if (value == null) {
+                                  return;
+                                }
+                                setState(() {
+                                  _selectedCategory = value;
+                                });
+                              },
+                            ),
+                          ],
+                        ),
                       ),
-                      const SizedBox(width: 15),
-                      ElevatedButton(
-                        onPressed: () {
-                          _filterExpense();
-                        },
-                        child: Text('Filter'),
-                      )
                     ],
                   ),
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(_selectedDate == null
+                        ? 'No Date Selected'
+                        : formatter.format(_selectedDate!)),
+                    IconButton(
+                      onPressed: _presentDatePicker,
+                      icon: const Icon(Icons.calendar_month),
+                    ),
+                  ],
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    setState(() {
+                      _filteredDate = _selectedDate;
+                      expenseName = _nameContoller.text;
+                      _filteredCategory = _selectedCategory;
+                    });
+                  },
+                  child: const Text('Filter'),
                 ),
                 Expanded(
                   child: ListView.builder(

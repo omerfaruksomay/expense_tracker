@@ -67,77 +67,76 @@ const categoryName = {
 };
 
 //dummy data
-//utcsiz
 
 List<Expense> dummyExpenses = [
   Expense(
     id: 1,
     name: 'test1',
     amount: 45,
-    date: DateTime.utc(2023, 07, 23),
+    date: DateTime(2023, 07, 23),
     category: Category.diger,
   ),
   Expense(
     id: 2,
     name: 'test2',
     amount: 45,
-    date: DateTime.utc(2023, 06, 23),
+    date: DateTime(2023, 06, 23),
     category: Category.egitim,
   ),
   Expense(
     id: 3,
     name: 'test3',
     amount: 45,
-    date: DateTime.utc(2023, 07, 21),
+    date: DateTime(2023, 07, 21),
     category: Category.eglence,
   ),
   Expense(
     id: 4,
     name: 'test4',
     amount: 45,
-    date: DateTime.utc(2023, 07, 17),
+    date: DateTime(2023, 07, 17),
     category: Category.konut,
   ),
   Expense(
     id: 5,
     name: 'test5',
     amount: 45,
-    date: DateTime.utc(2023, 07, 18),
+    date: DateTime(2023, 07, 18),
     category: Category.saglik,
   ),
   Expense(
     id: 6,
     name: 'test6',
     amount: 45,
-    date: DateTime.utc(2023, 07, 19),
+    date: DateTime(2023, 07, 19),
     category: Category.ulasim,
   ),
   Expense(
     id: 7,
     name: 'test7',
     amount: 45,
-    date: DateTime.utc(2023, 07, 23),
+    date: DateTime(2023, 07, 23),
     category: Category.diger,
   ),
   Expense(
     id: 8,
     name: 'test8',
     amount: 45,
-    date: DateTime.utc(2023, 07, 22),
+    date: DateTime(2023, 07, 22),
     category: Category.egitim,
   ),
   Expense(
     id: 9,
     name: 'test9',
     amount: 45,
-    date: DateTime.utc(2023, 07, 21),
+    date: DateTime(2023, 07, 21),
     category: Category.eglence,
   ),
   Expense(
     id: 10,
     name: 'test10',
     amount: 45,
-    date: DateTime.utc(2023, 06, 23),
+    date: DateTime(2023, 06, 23),
     category: Category.konut,
   ),
 ];

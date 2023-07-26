@@ -4,20 +4,22 @@ import 'package:hive_flutter/hive_flutter.dart';
 
 import '../models/expense.dart';
 
-class DateAndCategoryFilter extends StatefulWidget {
-  const DateAndCategoryFilter({super.key});
+class DateAndNameFilter extends StatefulWidget {
+  const DateAndNameFilter({super.key});
 
   @override
-  State<DateAndCategoryFilter> createState() => _FilterPractiseState();
+  State<DateAndNameFilter> createState() => _DateAndNameFilterState();
 }
 
-class _FilterPractiseState extends State<DateAndCategoryFilter> {
+class _DateAndNameFilterState extends State<DateAndNameFilter> {
   late final Box expenseBox;
-  Category _selectedCategory = Category.diger;
-  Category? _filteredCategory;
+
+  String? expenseName;
+  final TextEditingController _nameContoller = TextEditingController();
 
   DateTime? _selectedDate;
   DateTime? _filteredDate;
+
   @override
   void initState() {
     super.initState();
@@ -49,13 +51,6 @@ class _FilterPractiseState extends State<DateAndCategoryFilter> {
     );
   }
 
-  _filterExpense() {
-    setState(() {
-      _filteredDate = _selectedDate;
-      _filteredCategory = _selectedCategory;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return ValueListenableBuilder(
@@ -64,11 +59,13 @@ class _FilterPractiseState extends State<DateAndCategoryFilter> {
         Map<dynamic, dynamic> raw = box.toMap();
         dynamic filteredExpenses;
         filteredExpenses = raw.values
-            .where(
-              (expense) =>
-                  expense.date == _selectedDate &&
-                  expense.category == _filteredCategory,
-            )
+            .where((expense) =>
+                expense.date == _selectedDate &&
+                expense.name
+                    .toString()
+                    .trim()
+                    .toLowerCase()
+                    .contains(expenseName.toString().trim().toLowerCase()))
             .toList();
         if (box.isEmpty) {
           return const Center(
@@ -86,49 +83,44 @@ class _FilterPractiseState extends State<DateAndCategoryFilter> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Text(_selectedDate == null
-                              ? 'No Date Selected'
-                              : formatter.format(_selectedDate!)),
-                          IconButton(
-                            onPressed: _presentDatePicker,
-                            icon: const Icon(Icons.calendar_month),
-                          ),
-                        ],
-                      ),
-                      DropdownButton(
-                        value: _selectedCategory,
-                        items: Category.values
-                            .map(
-                              (category) => DropdownMenuItem(
-                                value: category,
-                                child: Text(
-                                  category.name.toUpperCase(),
+                      Expanded(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Expanded(
+                              child: TextField(
+                                controller: _nameContoller,
+                                decoration: const InputDecoration(
+                                  border: OutlineInputBorder(),
+                                  labelText: 'Expense Name',
                                 ),
                               ),
-                            )
-                            .toList(),
-                        onChanged: (value) {
-                          if (value == null) {
-                            return;
-                          }
-                          setState(() {
-                            _selectedCategory = value;
-                          });
-                        },
+                            ),
+                            SizedBox(width: 10),
+                            Text(_selectedDate == null
+                                ? 'No Date Selected'
+                                : formatter.format(_selectedDate!)),
+                            IconButton(
+                              onPressed: _presentDatePicker,
+                              icon: const Icon(Icons.calendar_month),
+                            ),
+                          ],
+                        ),
                       ),
-                      const SizedBox(width: 15),
-                      ElevatedButton(
-                        onPressed: () {
-                          _filterExpense();
-                        },
-                        child: Text('Filter'),
-                      )
                     ],
                   ),
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    setState(() {
+                      _filteredDate = _selectedDate;
+                      expenseName = _nameContoller.text;
+                    });
+                    print(_filteredDate);
+                    print(expenseName);
+                  },
+                  child: const Text('Filter'),
                 ),
                 Expanded(
                   child: ListView.builder(
