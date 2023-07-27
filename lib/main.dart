@@ -1,3 +1,4 @@
+import 'package:expense_tracker/models/category.dart';
 import 'package:expense_tracker/models/expense.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -10,8 +11,10 @@ void main() async {
   Hive.registerAdapter(ExpenseAdapter());
   Hive.registerAdapter(CategoryAdapter());
   //box
-  await Hive.openBox<Expense>('expenses');
-
+  var expenseBox = await Hive.openBox<Expense>('expenses');
+  var catBox = await Hive.openBox<Category>('categories');
+  // box isFirstLogin
+  // cat update
   runApp(const MyApp());
 }
 

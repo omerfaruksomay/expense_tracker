@@ -1,3 +1,4 @@
+import 'package:expense_tracker/models/category.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -12,7 +13,8 @@ class FilterScreen extends StatefulWidget {
 }
 
 class _ToggleFilterState extends State<FilterScreen> {
-  late final Box expenseBox;
+  late final Box<Expense> expenseBox;
+  late final Box<Category> categoryBox;
 
   String? expenseName;
   final TextEditingController _nameContoller = TextEditingController();
@@ -20,13 +22,14 @@ class _ToggleFilterState extends State<FilterScreen> {
   DateTime? _selectedDate;
   DateTime? _filteredDate;
 
-  Category _selectedCategory = Category.diger;
+  Category? _selectedCategory;
   Category? _filteredCategory;
 
   @override
   void initState() {
     super.initState();
     expenseBox = Hive.box<Expense>('expenses');
+    categoryBox = Hive.box<Category>('categories');
   }
 
   _presentDatePicker() async {
@@ -88,6 +91,25 @@ class _ToggleFilterState extends State<FilterScreen> {
                 Map<dynamic, dynamic> raw = box.toMap();
                 dynamic filteredExpenses;
 
+                //todo->
+
+                // var datalar = raw.values;
+
+                // if (_selectedFilters[0]) {
+                //   //cat
+                //   datalar.where((element) => false);
+                // }
+
+                // if (_selectedFilters[1]) {
+                //   //name
+                //   datalar.where((element) => false);
+                // }
+
+                // if (_selectedFilters[2]) {
+                //   //date
+                //   datalar.where((element) => false);
+                // }
+
                 if (_selectedFilters[0] == true &&
                     _selectedFilters[1] == true &&
                     _selectedFilters[2] == true) {
@@ -96,7 +118,7 @@ class _ToggleFilterState extends State<FilterScreen> {
                           expense.date == _selectedDate &&
                           expense.name.toString().trim().toLowerCase().contains(
                               expenseName.toString().trim().toLowerCase()) &&
-                          expense.category == _filteredCategory)
+                          expense.categoryId == _filteredCategory!.id)
                       .toList();
                 } else if (_selectedFilters[0] == false &&
                     _selectedFilters[1] == false &&
@@ -105,11 +127,16 @@ class _ToggleFilterState extends State<FilterScreen> {
                 } else if (_selectedFilters[0] == true &&
                     _selectedFilters[1] == false &&
                     _selectedFilters[2] == false) {
-                  filteredExpenses = raw.values
-                      .where(
-                        (expense) => expense.category == _filteredCategory,
-                      )
-                      .toList();
+                  if (_filteredCategory != null) {
+                    filteredExpenses = raw.values
+                        .where(
+                          (expense) =>
+                              expense.categoryId == _filteredCategory!.id,
+                        )
+                        .toList();
+                  } else {
+                    filteredExpenses = raw.values.toList();
+                  }
                 } else if (_selectedFilters[0] == false &&
                     _selectedFilters[1] == true &&
                     _selectedFilters[2] == false) {
@@ -134,7 +161,7 @@ class _ToggleFilterState extends State<FilterScreen> {
                       .where((expense) =>
                           expense.name.toString().trim().toLowerCase().contains(
                               expenseName.toString().trim().toLowerCase()) &&
-                          expense.category == _filteredCategory)
+                          expense.categoryId == _filteredCategory!.id)
                       .toList();
                 } else if (_selectedFilters[0] == false &&
                     _selectedFilters[1] == true &&
@@ -151,10 +178,9 @@ class _ToggleFilterState extends State<FilterScreen> {
                   filteredExpenses = raw.values
                       .where((expense) =>
                           expense.date == _selectedDate &&
-                          expense.category == _filteredCategory)
+                          expense.categoryId == _filteredCategory!.id)
                       .toList();
                 }
-
                 if (box.isEmpty) {
                   return const Center(
                     child: Text(
@@ -190,7 +216,7 @@ class _ToggleFilterState extends State<FilterScreen> {
                                       visible: _selectedFilters[0],
                                       child: DropdownButton(
                                         value: _selectedCategory,
-                                        items: Category.values
+                                        items: categoryBox.values
                                             .map(
                                               (category) => DropdownMenuItem(
                                                 value: category,
@@ -254,6 +280,10 @@ class _ToggleFilterState extends State<FilterScreen> {
                           child: ListView.builder(
                             itemCount: filteredExpenses.length,
                             itemBuilder: (context, index) {
+                              Category category = categoryBox.values.firstWhere(
+                                  (cat) =>
+                                      cat.id ==
+                                      filteredExpenses[index].categoryId);
                               return Padding(
                                 padding: const EdgeInsets.all(8.0),
                                 child: Stack(
@@ -299,13 +329,13 @@ class _ToggleFilterState extends State<FilterScreen> {
                                                     .toString()),
                                             trailing: Column(
                                               children: [
-                                                Icon(categoryIcons[
-                                                    filteredExpenses[index]
-                                                        .category]),
+                                                Text(category.name),
                                                 const SizedBox(height: 5),
-                                                Text(formatter.format(
-                                                    filteredExpenses[index]
-                                                        .date)),
+                                                Text(
+                                                  formatter.format(
+                                                      filteredExpenses[index]
+                                                          .date),
+                                                ),
                                               ],
                                             ),
                                           ),

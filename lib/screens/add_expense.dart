@@ -1,3 +1,4 @@
+import 'package:expense_tracker/models/category.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 
@@ -11,13 +12,14 @@ class AddExpenseScreen extends StatefulWidget {
 }
 
 class _AddExpenseScreenState extends State<AddExpenseScreen> {
-  late final Box box;
+  late final Box expenseBox;
+  late final Box categoryBox;
 
   final _nameController = TextEditingController();
   final _amaountController = TextEditingController();
 
   DateTime? _selectedDate;
-  Category _selectedCategory = Category.diger;
+  String? _selectedCategory;
 
   final _expenseFormKey = GlobalKey<FormState>();
 
@@ -25,7 +27,8 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    box = Hive.box<Expense>('expenses');
+    expenseBox = Hive.box<Expense>('expenses');
+    categoryBox = Hive.box<Category>('categories');
   }
 
   void _presentDatePicker() async {
@@ -45,18 +48,21 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
   }
 
   _addExpense() async {
-    final int id = box.length + 1;
+    final int id = expenseBox.length + 1;
     final enteredAmount = int.parse(_amaountController.text);
+    final int categoryId = categoryBox.values
+        .firstWhere((category) => category.name == _selectedCategory)
+        .id;
 
     Expense newExpense = Expense(
       id: id,
       name: _nameController.text,
       amount: enteredAmount,
       date: _selectedDate!,
-      category: _selectedCategory,
+      categoryId: categoryId,
     );
 
-    box.add(newExpense);
+    expenseBox.add(newExpense);
 
     return ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
@@ -120,26 +126,28 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
                         ),
                       ],
                     ),
-                    DropdownButton(
-                      value: _selectedCategory,
-                      items: Category.values
-                          .map(
-                            (category) => DropdownMenuItem(
-                              value: category,
-                              child: Text(
-                                category.name.toUpperCase(),
-                              ),
-                            ),
-                          )
-                          .toList(),
-                      onChanged: (value) {
-                        if (value == null) {
-                          return;
-                        }
-                        setState(() {
-                          _selectedCategory = value;
-                        });
-                      },
+                    Expanded(
+                      child: DropdownButtonFormField<String>(
+                        value: _selectedCategory,
+                        onChanged: (value) {
+                          setState(() {
+                            _selectedCategory = value;
+                          });
+                        },
+                        items: categoryBox.values
+                            .map((category) => DropdownMenuItem<String>(
+                                  value: category.name,
+                                  child: Text(category.name),
+                                ))
+                            .toList(),
+                        decoration: InputDecoration(labelText: 'Kategori'),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Lütfen bir kategori seçin.';
+                          }
+                          return null;
+                        },
+                      ),
                     ),
                   ],
                 ),

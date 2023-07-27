@@ -69,7 +69,7 @@ class _DateFilterState extends State<DateFilter> {
                     subtitle: Text(expense.amount.toString()),
                     trailing: Column(
                       children: [
-                        Icon(categoryIcons[expense.category]),
+                        // Icon(categoryIcons[expense.category]),
                         const SizedBox(height: 5),
                         Text(formatter.format(expense.date)),
                       ],

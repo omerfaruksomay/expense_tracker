@@ -1,3 +1,4 @@
+import 'package:expense_tracker/screens/add_category.dart';
 import 'package:flutter/material.dart';
 
 import '/screens/add_expense.dart';
@@ -11,7 +12,8 @@ class WelcomeScreen extends StatefulWidget {
 
 class _WelcomeScreenState extends State<WelcomeScreen> {
   String welcomeMessage = 'Welcome the Expense Tracker App !';
-  String buttonText = 'Lets Add Some Expense';
+  String addExpenseButtonText = 'Lets Add Some Expense';
+  String addCategoryButtonText = 'Lets Add Some Category';
 
   @override
   Widget build(BuildContext context) {
@@ -21,12 +23,23 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
         children: [
           Text(welcomeMessage),
           TextButton(
-              onPressed: () {
-                Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => const AddExpenseScreen(),
-                ));
-              },
-              child: Text(buttonText))
+            onPressed: () {
+              Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => const AddExpenseScreen(),
+              ));
+            },
+            child: Text(addExpenseButtonText),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => const AddCategoryScreen(),
+                ),
+              );
+            },
+            child: Text(addCategoryButtonText),
+          ),
         ],
       ),
     );
