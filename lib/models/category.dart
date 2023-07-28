@@ -17,4 +17,10 @@ class Category {
 
 //dummy category
 
-List<Category> dummyCategories = [Category(id: 1, name: 'diger')];
+List<Category> defaultCategories = [
+  Category(id: 1, name: 'diger'),
+  Category(id: 2, name: 'ev'),
+  Category(id: 3, name: 'eğitim'),
+  Category(id: 4, name: 'ulaşım'),
+  Category(id: 5, name: 'eğlence'),
+];

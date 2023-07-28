@@ -13,8 +13,14 @@ void main() async {
   //box
   var expenseBox = await Hive.openBox<Expense>('expenses');
   var catBox = await Hive.openBox<Category>('categories');
-  // box isFirstLogin
-  // cat update
+
+  if (catBox.isEmpty) {
+    catBox.addAll(defaultCategories);
+  }
+  if (expenseBox.isEmpty) {
+    expenseBox.addAll(dummyExpenses);
+  }
+
   runApp(const MyApp());
 }
 
