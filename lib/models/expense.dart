@@ -31,6 +31,14 @@ class Expense {
   }
 }
 
+class ChartData {
+  final int categoryId;
+  final num amount;
+  final String categoryName;
+
+  ChartData(this.categoryId, this.amount, this.categoryName);
+}
+
 //dummy data
 
 List<Expense> dummyExpenses = [
@@ -67,7 +75,7 @@ List<Expense> dummyExpenses = [
     name: 'test5',
     amount: 95,
     date: DateTime(2023, 07, 18),
-    categoryId: 5,
+    categoryId: 3,
   ),
   Expense(
     id: 6,
@@ -102,6 +110,6 @@ List<Expense> dummyExpenses = [
     name: 'test10',
     amount: 245,
     date: DateTime(2023, 06, 23),
-    categoryId: 5,
+    categoryId: 4,
   ),
 ];

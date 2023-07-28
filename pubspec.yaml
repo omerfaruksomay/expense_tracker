@@ -38,6 +38,7 @@ dependencies:
   hive_flutter: ^1.1.0
   hive_generator: ^2.0.0
   intl: ^0.18.1
+  syncfusion_flutter_charts: ^22.2.5
   syncfusion_flutter_datepicker: ^22.1.39
 
 dev_dependencies:
