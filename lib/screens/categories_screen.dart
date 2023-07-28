@@ -91,8 +91,12 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                         child: InkWell(
                           onTap: () {
                             Navigator.of(context).push(MaterialPageRoute(
-                              builder: (context) =>
-                                  const UpdateCategoryScreen(),
+                              builder: (context) => UpdateCategoryScreen(
+                                id: categories[index].id,
+                                index: index,
+                                category: categories,
+                                nameController: categories[index].name,
+                              ),
                             ));
                           },
                           child: ListTile(
