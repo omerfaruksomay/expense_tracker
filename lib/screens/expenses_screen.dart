@@ -1,3 +1,4 @@
+import 'package:expense_tracker/screens/update_expense.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:hive_flutter/adapters.dart';
@@ -90,6 +91,18 @@ class _ExpensesScreenState extends State<ExpensesScreen> {
                                 Theme.of(context).colorScheme.primaryContainer,
                             borderRadius: BorderRadius.circular(10)),
                         child: InkWell(
+                          onTap: () {
+                            Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) => UpdateExpenseScreeen(
+                                id: expense[index].id,
+                                index: index,
+                                expenseData: expense,
+                                name: expense[index].name,
+                                amount: expense[index].amount,
+                                date: expense[index].date,
+                              ),
+                            ));
+                          },
                           child: ListTile(
                             title: Text(expense[index].name),
                             subtitle: Text(expense[index].amount.toString()),

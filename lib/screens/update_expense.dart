@@ -1,22 +1,38 @@
 import 'package:expense_tracker/models/category.dart';
+import 'package:expense_tracker/models/expense.dart';
 import 'package:flutter/material.dart';
-import 'package:hive/hive.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 
-import '/models/expense.dart';
+class UpdateExpenseScreeen extends StatefulWidget {
+  const UpdateExpenseScreeen({
+    super.key,
+    required this.id,
+    required this.index,
+    required this.expenseData,
+    required this.name,
+    required this.amount,
+    required this.date,
+  });
 
-class AddExpenseScreen extends StatefulWidget {
-  const AddExpenseScreen({super.key});
+  final int id;
+  final int index;
+  final dynamic expenseData;
+
+  final name;
+  final amount;
+  final date;
 
   @override
-  State<AddExpenseScreen> createState() => _AddExpenseScreenState();
+  State<UpdateExpenseScreeen> createState() => UpdateExpenseScreeenState();
 }
 
-class _AddExpenseScreenState extends State<AddExpenseScreen> {
-  late final Box expenseBox;
+class UpdateExpenseScreeenState extends State<UpdateExpenseScreeen> {
   late final Box categoryBox;
+  late final Box expenseBox;
 
-  final _nameController = TextEditingController();
-  final _amaountController = TextEditingController();
+  late final TextEditingController _nameController;
+
+  late final TextEditingController _amaountController;
 
   DateTime? _selectedDate;
   String? _selectedCategory;
@@ -29,6 +45,9 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
     super.initState();
     expenseBox = Hive.box<Expense>('expenses');
     categoryBox = Hive.box<Category>('categories');
+    _nameController = TextEditingController(text: widget.name);
+    _amaountController = TextEditingController(text: widget.amount.toString());
+    _selectedDate = widget.date;
   }
 
   void _presentDatePicker() async {
@@ -45,14 +64,14 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
     });
   }
 
-  _addExpense() async {
-    final int id = expenseBox.length + 1;
+  _updateExpense() {
+    final int id = widget.id;
     final enteredAmount = int.parse(_amaountController.text);
     final int categoryId = categoryBox.values
         .firstWhere((category) => category.name == _selectedCategory)
         .id;
 
-    Expense newExpense = Expense(
+    Expense updatedExpense = Expense(
       id: id,
       name: _nameController.text,
       amount: enteredAmount,
@@ -60,11 +79,11 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
       categoryId: categoryId,
     );
 
-    expenseBox.add(newExpense);
+    expenseBox.putAt(widget.index, updatedExpense);
 
     return ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
-        content: Text('Expesnse Added!'),
+        content: Text('Expesnse Updated!'),
       ),
     );
   }
@@ -80,7 +99,8 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Add Expense'),
+        title: Text('Update Expense id: ${widget.id}'),
+        centerTitle: true,
       ),
       body: Padding(
         padding: const EdgeInsets.all(8),
@@ -167,7 +187,7 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
                       child: FilledButton(
                         onPressed: () {
                           if (_expenseFormKey.currentState!.validate()) {
-                            _addExpense();
+                            _updateExpense();
                             Navigator.of(context).pop();
                           }
                         },
