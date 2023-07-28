@@ -91,24 +91,7 @@ class _ToggleFilterState extends State<FilterScreen> {
                 Map<dynamic, dynamic> raw = box.toMap();
                 dynamic filteredExpenses;
 
-                //todo->
-
-                // var datalar = raw.values;
-
-                // if (_selectedFilters[0]) {
-                //   //cat
-                //   datalar.where((element) => false);
-                // }
-
-                // if (_selectedFilters[1]) {
-                //   //name
-                //   datalar.where((element) => false);
-                // }
-
-                // if (_selectedFilters[2]) {
-                //   //date
-                //   datalar.where((element) => false);
-                // }
+                //todo-> better solution for filters
 
                 if (_selectedFilters[0] == true &&
                     _selectedFilters[1] == true &&

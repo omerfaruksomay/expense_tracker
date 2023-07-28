@@ -13,7 +13,6 @@ class WelcomeScreen extends StatefulWidget {
 class _WelcomeScreenState extends State<WelcomeScreen> {
   String welcomeMessage = 'Welcome the Expense Tracker App !';
   String addExpenseButtonText = 'Lets Add Some Expense';
-  String addCategoryButtonText = 'Lets Add Some Category';
 
   @override
   Widget build(BuildContext context) {
@@ -29,16 +28,6 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
               ));
             },
             child: Text(addExpenseButtonText),
-          ),
-          TextButton(
-            onPressed: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) => const AddCategoryScreen(),
-                ),
-              );
-            },
-            child: Text(addCategoryButtonText),
           ),
         ],
       ),

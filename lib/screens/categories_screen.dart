@@ -1,37 +1,34 @@
+import 'package:expense_tracker/models/category.dart';
+import 'package:expense_tracker/screens/add_category.dart';
+import 'package:expense_tracker/screens/update_category.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
-import 'package:hive_flutter/adapters.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 
-import '/models/expense.dart';
-import '/models/category.dart';
-import '/screens/add_expense.dart';
-
-class ExpensesScreen extends StatefulWidget {
-  const ExpensesScreen({super.key});
+class CategoriesScreen extends StatefulWidget {
+  const CategoriesScreen({super.key});
 
   @override
-  State<ExpensesScreen> createState() => _ExpensesScreenState();
+  State<CategoriesScreen> createState() => _CategoriesScreenState();
 }
 
-class _ExpensesScreenState extends State<ExpensesScreen> {
-  late final Box expenseBox;
+class _CategoriesScreenState extends State<CategoriesScreen> {
   late final Box categoryBox;
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    expenseBox = Hive.box<Expense>('expenses');
     categoryBox = Hive.box<Category>('categories');
   }
 
-  _deleteExpense(int index) {
-    expenseBox.deleteAt(index);
+  _deleteCategory(int index) {
+    categoryBox.deleteAt(index);
     print('İtem Deleted');
     return ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
         duration: Duration(seconds: 3),
-        content: Text('Expense deleted !'),
+        content: Text('Category deleted !'),
       ),
     );
   }
@@ -39,26 +36,28 @@ class _ExpensesScreenState extends State<ExpensesScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: const Text('Categories'),
+        centerTitle: true,
+      ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Navigator.of(context).push(
             MaterialPageRoute(
-              builder: (context) => const AddExpenseScreen(),
+              builder: (context) => const AddCategoryScreen(),
             ),
           );
         },
         child: const Icon(Icons.add),
       ),
       body: ValueListenableBuilder(
-        valueListenable: expenseBox.listenable(),
+        valueListenable: categoryBox.listenable(),
         builder: (context, Box box, child) {
           Map<dynamic, dynamic> raw = box.toMap();
-          dynamic expense = raw.values.toList();
+          dynamic categories = raw.values.toList();
           return ListView.builder(
-            itemCount: expense.length,
+            itemCount: categories.length,
             itemBuilder: (context, index) {
-              Category category = categoryBox.values
-                  .firstWhere((cat) => cat.id == expense[index].categoryId);
               return Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Stack(
@@ -76,7 +75,7 @@ class _ExpensesScreenState extends State<ExpensesScreen> {
                         motion: const StretchMotion(),
                         children: [
                           SlidableAction(
-                            onPressed: (context) => _deleteExpense(index),
+                            onPressed: (context) => _deleteCategory(index),
                             icon: Icons.delete,
                             backgroundColor: Colors.red,
                             borderRadius: BorderRadius.circular(10),
@@ -90,18 +89,16 @@ class _ExpensesScreenState extends State<ExpensesScreen> {
                                 Theme.of(context).colorScheme.primaryContainer,
                             borderRadius: BorderRadius.circular(10)),
                         child: InkWell(
+                          onTap: () {
+                            Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) =>
+                                  const UpdateCategoryScreen(),
+                            ));
+                          },
                           child: ListTile(
-                            title: Text(expense[index].name),
-                            subtitle: Text(expense[index].amount.toString()),
-                            trailing: Column(
-                              children: [
-                                Text(category.name),
-                                const SizedBox(height: 5),
-                                Text(
-                                  formatter.format(expense[index].date),
-                                ),
-                              ],
-                            ),
+                            title: Text(categories[index].name),
+                            trailing:
+                                Text('id = ${categories[index].id.toString()}'),
                           ),
                         ),
                       ),
