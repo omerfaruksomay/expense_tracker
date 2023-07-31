@@ -1,34 +1,38 @@
-import 'package:expense_tracker/models/category.dart';
-import 'package:expense_tracker/screens/add_category.dart';
-import 'package:expense_tracker/screens/update_category.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
-import 'package:hive_flutter/hive_flutter.dart';
+import 'package:hive_flutter/adapters.dart';
 
-class CategoriesScreen extends StatefulWidget {
-  const CategoriesScreen({super.key});
+import '/models/expense.dart';
+import '/models/category.dart';
+import 'add_expense.dart';
+import 'update_expense.dart';
+
+class ExpensesScreen extends StatefulWidget {
+  const ExpensesScreen({super.key});
 
   @override
-  State<CategoriesScreen> createState() => _CategoriesScreenState();
+  State<ExpensesScreen> createState() => _ExpensesScreenState();
 }
 
-class _CategoriesScreenState extends State<CategoriesScreen> {
+class _ExpensesScreenState extends State<ExpensesScreen> {
+  late final Box expenseBox;
   late final Box categoryBox;
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    expenseBox = Hive.box<Expense>('expenses');
     categoryBox = Hive.box<Category>('categories');
   }
 
-  _deleteCategory(int index) {
-    categoryBox.deleteAt(index);
+  _deleteExpense(int index) {
+    expenseBox.deleteAt(index);
     print('İtem Deleted');
     return ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
         duration: Duration(seconds: 3),
-        content: Text('Category deleted !'),
+        content: Text('Expense deleted !'),
       ),
     );
   }
@@ -36,28 +40,26 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Categories'),
-        centerTitle: true,
-      ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Navigator.of(context).push(
             MaterialPageRoute(
-              builder: (context) => const AddCategoryScreen(),
+              builder: (context) => const AddExpenseScreen(),
             ),
           );
         },
         child: const Icon(Icons.add),
       ),
       body: ValueListenableBuilder(
-        valueListenable: categoryBox.listenable(),
+        valueListenable: expenseBox.listenable(),
         builder: (context, Box box, child) {
           Map<dynamic, dynamic> raw = box.toMap();
-          dynamic categories = raw.values.toList();
+          dynamic expense = raw.values.toList();
           return ListView.builder(
-            itemCount: categories.length,
+            itemCount: expense.length,
             itemBuilder: (context, index) {
+              Category category = categoryBox.values
+                  .firstWhere((cat) => cat.id == expense[index].categoryId);
               return Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Stack(
@@ -75,7 +77,7 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                         motion: const StretchMotion(),
                         children: [
                           SlidableAction(
-                            onPressed: (context) => _deleteCategory(index),
+                            onPressed: (context) => _deleteExpense(index),
                             icon: Icons.delete,
                             backgroundColor: Colors.red,
                             borderRadius: BorderRadius.circular(10),
@@ -91,18 +93,28 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                         child: InkWell(
                           onTap: () {
                             Navigator.of(context).push(MaterialPageRoute(
-                              builder: (context) => UpdateCategoryScreen(
-                                id: categories[index].id,
+                              builder: (context) => UpdateExpenseScreeen(
+                                id: expense[index].id,
                                 index: index,
-                                category: categories,
-                                nameController: categories[index].name,
+                                expenseData: expense,
+                                name: expense[index].name,
+                                amount: expense[index].amount,
+                                date: expense[index].date,
                               ),
                             ));
                           },
                           child: ListTile(
-                            title: Text(categories[index].name),
-                            trailing:
-                                Text('id = ${categories[index].id.toString()}'),
+                            title: Text(expense[index].name),
+                            subtitle: Text(expense[index].amount.toString()),
+                            trailing: Column(
+                              children: [
+                                Text(category.name),
+                                const SizedBox(height: 5),
+                                Text(
+                                  formatter.format(expense[index].date),
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                       ),

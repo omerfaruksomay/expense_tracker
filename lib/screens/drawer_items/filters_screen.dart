@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
-import '../models/expense.dart';
+import '../../models/expense.dart';
 
 class FilterScreen extends StatefulWidget {
   const FilterScreen({super.key});
@@ -164,6 +164,7 @@ class _ToggleFilterState extends State<FilterScreen> {
                           expense.categoryId == _filteredCategory!.id)
                       .toList();
                 }
+
                 if (box.isEmpty) {
                   return const Center(
                     child: Text(

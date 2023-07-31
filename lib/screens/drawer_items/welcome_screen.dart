@@ -1,7 +1,6 @@
-import 'package:expense_tracker/screens/add_category.dart';
 import 'package:flutter/material.dart';
 
-import '/screens/add_expense.dart';
+import '../expense_related/add_expense.dart';
 
 class WelcomeScreen extends StatefulWidget {
   const WelcomeScreen({super.key});

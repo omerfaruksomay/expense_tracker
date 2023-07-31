@@ -18,9 +18,9 @@ class Category {
 //dummy category
 
 List<Category> defaultCategories = [
-  Category(id: 0, name: 'diger'),
-  Category(id: 1, name: 'ev'),
-  Category(id: 2, name: 'eğitim'),
-  Category(id: 3, name: 'ulaşım'),
-  Category(id: 4, name: 'eğlence'),
+  Category(id: 0, name: 'Diğer'),
+  Category(id: 1, name: 'Ev'),
+  Category(id: 2, name: 'Eğitim'),
+  Category(id: 3, name: 'Ulaşım'),
+  Category(id: 4, name: 'Eğlence'),
 ];

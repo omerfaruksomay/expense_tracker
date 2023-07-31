@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 
-import 'filters_screen.dart';
+import 'drawer_items/dashboard_screen.dart';
+import 'drawer_items/filters_screen.dart';
+import 'drawer_items/settings_screen.dart';
+import 'drawer_items/welcome_screen.dart';
 
-import 'dashboard_screen.dart';
-import 'expenses_screen.dart';
-
-import 'settings_screen.dart';
-import 'welcome_screen.dart';
+import 'expense_related/expenses_screen.dart';
 
 class DrawerScreen extends StatefulWidget {
   const DrawerScreen({super.key});

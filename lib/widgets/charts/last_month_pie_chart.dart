@@ -2,17 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
-import '/models/category.dart';
-import '/models/expense.dart';
+import '../../models/category.dart';
+import '../../models/expense.dart';
 
-class DashboardScreen extends StatefulWidget {
-  const DashboardScreen({super.key});
+class LastMonthPieChart extends StatefulWidget {
+  const LastMonthPieChart({super.key});
 
   @override
-  State<DashboardScreen> createState() => _DashboardScreenState();
+  State<LastMonthPieChart> createState() => _TableChartState();
 }
 
-class _DashboardScreenState extends State<DashboardScreen> {
+class _TableChartState extends State<LastMonthPieChart> {
   late final Box expenseBox;
   late final Box categoryBox;
   late List<dynamic> _chartData;
@@ -37,15 +37,25 @@ class _DashboardScreenState extends State<DashboardScreen> {
     return category.name;
   }
 
+  List<dynamic> getLastMonthExpenses(List<dynamic> expenses) {
+    final DateTime now = DateTime.now();
+    final DateTime lastMonth = DateTime(now.year, now.month - 1, now.day);
+
+    return expenses
+        .where((expense) => expense.date.isAfter(lastMonth))
+        .toList();
+  }
+
   void totalAmount() {
     if (_chartData == null) {
       return;
     }
 
+    List<dynamic> lastMonthExpenses = getLastMonthExpenses(_chartData);
     Map<int, num> categoryExpenses = {};
 
-    for (var i = 0; i < _chartData.length; i++) {
-      var item = _chartData[i];
+    for (var i = 0; i < lastMonthExpenses.length; i++) {
+      var item = lastMonthExpenses[i];
       if (item != null) {
         var categoryId = item.categoryId;
         var amount = item.amount;
@@ -74,25 +84,19 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Container(
-        height: 350,
-        width: 400,
-        child: SfCartesianChart(
-          primaryXAxis: CategoryAxis(),
-          primaryYAxis: NumericAxis(),
-          series: <ChartSeries>[
-            ColumnSeries(
-              dataSource: _chartData,
-              xValueMapper: (data, index) {
-                print('asdasdasd $index');
-                return _chartData[index].categoryName;
-              },
-              yValueMapper: (data, index) => data.amount,
-            ),
-          ],
+    return SfCircularChart(
+      legend: const Legend(
+          isVisible: true,
+          overflowMode: LegendItemOverflowMode.wrap,
+          position: LegendPosition.left),
+      series: <CircularSeries>[
+        PieSeries<dynamic, dynamic>(
+          dataSource: _chartData,
+          xValueMapper: (data, index) => _chartData[index].categoryName,
+          yValueMapper: (data, index) => _chartData[index].amount,
+          dataLabelSettings: DataLabelSettings(isVisible: true),
         ),
-      ),
+      ],
     );
   }
 }

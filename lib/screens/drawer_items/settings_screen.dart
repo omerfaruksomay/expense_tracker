@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '/screens/categories_screen.dart';
+import '/screens/categort_related/categories_screen.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});

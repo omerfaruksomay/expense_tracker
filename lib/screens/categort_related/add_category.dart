@@ -26,7 +26,7 @@ class _AddCategoryScreenState extends State<AddCategoryScreen> {
 
   void _addCategory() {
     if (_formKey.currentState!.validate()) {
-      final int id = categoryBox.length + 1;
+      final int id = categoryBox.length;
       final newCategory = Category(
         id: id,
         name: _nameController.text,
