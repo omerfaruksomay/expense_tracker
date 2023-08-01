@@ -54,12 +54,15 @@ class _ExpensesScreenState extends State<ExpensesScreen> {
         valueListenable: expenseBox.listenable(),
         builder: (context, Box box, child) {
           Map<dynamic, dynamic> raw = box.toMap();
-          dynamic expense = raw.values.toList();
+          List<dynamic> expenses = raw.values.toList();
+          expenses.sort(
+            (a, b) => b.date.compareTo(a.date),
+          );
           return ListView.builder(
-            itemCount: expense.length,
+            itemCount: expenses.length,
             itemBuilder: (context, index) {
               Category category = categoryBox.values
-                  .firstWhere((cat) => cat.id == expense[index].categoryId);
+                  .firstWhere((cat) => cat.id == expenses[index].categoryId);
               return Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Stack(
@@ -94,24 +97,24 @@ class _ExpensesScreenState extends State<ExpensesScreen> {
                           onTap: () {
                             Navigator.of(context).push(MaterialPageRoute(
                               builder: (context) => UpdateExpenseScreeen(
-                                id: expense[index].id,
+                                id: expenses[index].id,
                                 index: index,
-                                expenseData: expense,
-                                name: expense[index].name,
-                                amount: expense[index].amount,
-                                date: expense[index].date,
+                                expenseData: expenses,
+                                name: expenses[index].name,
+                                amount: expenses[index].amount,
+                                date: expenses[index].date,
                               ),
                             ));
                           },
                           child: ListTile(
-                            title: Text(expense[index].name),
-                            subtitle: Text(expense[index].amount.toString()),
+                            title: Text(expenses[index].name),
+                            subtitle: Text(expenses[index].amount.toString()),
                             trailing: Column(
                               children: [
                                 Text(category.name),
                                 const SizedBox(height: 5),
                                 Text(
-                                  formatter.format(expense[index].date),
+                                  formatter.format(expenses[index].date),
                                 ),
                               ],
                             ),

@@ -81,6 +81,7 @@ class _PieChartState extends State<PieChart> {
           position: LegendPosition.left),
       series: <CircularSeries>[
         PieSeries<dynamic, dynamic>(
+          explode: true,
           dataSource: _chartData,
           xValueMapper: (data, index) => _chartData[index].categoryName,
           yValueMapper: (data, index) => _chartData[index].amount,

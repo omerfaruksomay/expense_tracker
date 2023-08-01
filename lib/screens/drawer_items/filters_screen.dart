@@ -91,8 +91,6 @@ class _ToggleFilterState extends State<FilterScreen> {
                 Map<dynamic, dynamic> raw = box.toMap();
                 dynamic filteredExpenses;
 
-                //todo-> better solution for filters
-
                 if (_selectedFilters[0] == true &&
                     _selectedFilters[1] == true &&
                     _selectedFilters[2] == true) {

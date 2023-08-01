@@ -1,9 +1,10 @@
-import 'package:expense_tracker/models/category.dart';
-import 'package:expense_tracker/models/expense.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'screens/drawer_screen.dart';
+import '/models/category.dart';
+import '/models/expense.dart';
 
 void main() async {
   await Hive.initFlutter();
@@ -30,13 +31,16 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Flutter Expense Tracker App',
-      theme: ThemeData(
-        useMaterial3: true,
+    return ScreenUtilInit(
+      builder: (context, child) => MaterialApp(
+        debugShowCheckedModeBanner: false,
+        title: 'Flutter Expense Tracker App',
+        theme: ThemeData(
+          useMaterial3: true,
+        ),
+        home: const DrawerScreen(),
       ),
-      home: const DrawerScreen(),
+      designSize: const Size(360, 600),
     );
   }
 }

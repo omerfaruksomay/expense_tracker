@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../expense_related/add_expense.dart';
 
@@ -19,7 +20,10 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Text(welcomeMessage),
+          Text(
+            welcomeMessage,
+            style: TextStyle(fontSize: 20.sp),
+          ),
           TextButton(
             onPressed: () {
               Navigator.of(context).push(MaterialPageRoute(

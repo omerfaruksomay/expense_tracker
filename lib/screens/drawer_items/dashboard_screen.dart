@@ -1,10 +1,7 @@
-import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 
-import '../../widgets/charts/last_month_pie_chart.dart';
-import '../../widgets/charts/last_month_table_chart.dart';
-import '../../widgets/charts/pie_chart.dart';
-import '../../widgets/charts/table_chart.dart';
+import '../analysis/last_month_analysis.dart';
+import '../analysis/overall_analysis.dart';
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
@@ -14,78 +11,50 @@ class DashboardScreen extends StatefulWidget {
 }
 
 class _DashboardScreenState extends State<DashboardScreen> {
+  List tabs = [
+    {
+      'title': 'Overall',
+      'widget': const OverallAnalysis(),
+    },
+    {
+      'title': 'Last Month',
+      'widget': const LastMonthAnalysis(),
+    },
+  ];
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            const SizedBox(height: 10),
-            Text('Overall'),
-            CarouselSlider(
-              options: CarouselOptions(
-                aspectRatio: 1.0,
-                enlargeCenterPage: true,
-                initialPage: 0,
+    return DefaultTabController(
+      initialIndex: 0,
+      length: tabs.length,
+      child: Scaffold(
+        body: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SizedBox(
+                height: 50,
+                child: TabBar(
+                  labelColor: Colors.black,
+                  tabs: [
+                    Tab(
+                      text: tabs[0]['title'],
+                    ),
+                    Tab(
+                      text: tabs[1]['title'],
+                    ),
+                  ],
+                ),
               ),
-              items: [
-                Container(
-                  margin: const EdgeInsets.fromLTRB(10, 20, 50, 10),
-                  child: const TableChart(),
-                ),
-                Container(
-                  margin: const EdgeInsets.fromLTRB(10, 20, 50, 10),
-                  child: const PieChart(),
-                ),
-              ],
-            ),
-            const SizedBox(height: 10),
-            const Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(Icons.arrow_left),
-                SizedBox(width: 5),
-                Text('Swipe'),
-                SizedBox(width: 5),
-                Icon(Icons.arrow_right),
-              ],
-            ),
-            const SizedBox(height: 10),
-            const Divider(thickness: 0.3),
-            const SizedBox(height: 10),
-            const Text('Last Month'),
-            CarouselSlider(
-              options: CarouselOptions(
-                aspectRatio: 1.0,
-                enlargeCenterPage: true,
-                initialPage: 0,
+              Expanded(
+                child: TabBarView(children: [
+                  tabs[0]['widget'],
+                  tabs[1]['widget'],
+                ]),
               ),
-              items: [
-                Container(
-                  margin: const EdgeInsets.fromLTRB(10, 20, 50, 10),
-                  child: const LastMonthTableChart(),
-                ),
-                Container(
-                  margin: const EdgeInsets.fromLTRB(10, 20, 50, 10),
-                  child: const LastMonthPieChart(),
-                ),
-              ],
-            ),
-            const SizedBox(height: 10),
-            const Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(Icons.arrow_left),
-                SizedBox(width: 5),
-                Text('Swipe'),
-                SizedBox(width: 5),
-                Icon(Icons.arrow_right),
-              ],
-            ),
-            const SizedBox(height: 10),
-            const Divider(thickness: 0.3),
-            const SizedBox(height: 10),
-          ],
+            ],
+          ),
         ),
       ),
     );
