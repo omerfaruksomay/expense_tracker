@@ -1,3 +1,4 @@
+import 'package:expense_tracker/theme/theme_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -14,6 +15,7 @@ void main() async {
   //box
   var expenseBox = await Hive.openBox<Expense>('expenses');
   var catBox = await Hive.openBox<Category>('categories');
+  var themeBox = await Hive.openBox('themeBox');
 
   if (catBox.isEmpty) {
     catBox.addAll(defaultCategories);
@@ -25,19 +27,41 @@ void main() async {
   runApp(const MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  late Box themeBox;
+
+  @override
+  void initState() {
+    super.initState();
+    themeBox = Hive.box('themeBox');
+    themeBox.listenable().addListener(_onThemeChange);
+  }
+
+  @override
+  void dispose() {
+    themeBox.listenable().removeListener(_onThemeChange);
+    super.dispose();
+  }
+
+  void _onThemeChange() {
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
+    bool isDarkMode = themeBox.get('darkMode') ?? false;
     return ScreenUtilInit(
       builder: (context, child) => MaterialApp(
         debugShowCheckedModeBanner: false,
         title: 'Flutter Expense Tracker App',
-        theme: ThemeData(
-          useMaterial3: true,
-        ),
+        theme: isDarkMode ? darkTheme : lighTheme,
         home: const DrawerScreen(),
       ),
       designSize: const Size(360, 600),

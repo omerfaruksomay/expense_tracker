@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 
 import '/screens/categort_related/categories_screen.dart';
 
@@ -14,8 +15,11 @@ class SettingsScreen extends StatefulWidget {
 class _SettingsScreenState extends State<SettingsScreen> {
   String placeHolder = 'Expense Tracker Settings';
 
+  final themeBox = Hive.box('themeBox');
+
   @override
   Widget build(BuildContext context) {
+    bool isDarkMode = themeBox.get('darkMode') ?? false;
     return Scaffold(
       body: Column(
         children: [
@@ -48,7 +52,29 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 ),
               ),
             ),
-          )
+          ),
+          Padding(
+            padding: const EdgeInsets.all(15.0),
+            child: Center(
+              child: ElevatedButton(
+                onPressed: () {},
+                child: Row(
+                  children: [
+                    const Text('Dark mode'),
+                    const Spacer(),
+                    Switch(
+                      value: isDarkMode,
+                      onChanged: (value) {
+                        setState(() {
+                          themeBox.put('darkMode', value);
+                        });
+                      },
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
         ],
       ),
     );
