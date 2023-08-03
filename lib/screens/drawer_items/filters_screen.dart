@@ -1,4 +1,5 @@
 import 'package:expense_tracker/models/category.dart';
+import 'package:expense_tracker/theme/theme_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -71,11 +72,11 @@ class _ToggleFilterState extends State<FilterScreen> {
       body: Center(
         child: Column(
           children: [
-            SizedBox(height: 20),
+            SizedBox(height: 25),
             ToggleButtons(
               borderRadius: const BorderRadius.all(Radius.circular(8)),
               selectedBorderColor: Colors.deepPurple,
-              fillColor: Colors.deepPurpleAccent,
+              fillColor: primaryColor,
               selectedColor: Colors.white,
               direction: Axis.horizontal,
               onPressed: (index) {
@@ -86,6 +87,7 @@ class _ToggleFilterState extends State<FilterScreen> {
               isSelected: _selectedFilters,
               children: filters,
             ),
+            SizedBox(height: 20),
             ValueListenableBuilder(
               valueListenable: expenseBox.listenable(),
               builder: (context, Box box, child) {

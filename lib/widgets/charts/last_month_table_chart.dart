@@ -1,3 +1,4 @@
+import 'package:expense_tracker/theme/theme_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
@@ -89,6 +90,7 @@ class _TableChartState extends State<LastMonthTableChart> {
       primaryYAxis: NumericAxis(),
       series: <ChartSeries>[
         ColumnSeries(
+          color: primaryColor,
           dataSource: _chartData,
           xValueMapper: (data, index) {
             return _chartData[index].categoryName;

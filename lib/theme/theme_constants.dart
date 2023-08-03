@@ -6,7 +6,7 @@ ThemeData darkTheme = ThemeData(
   useMaterial3: true,
   appBarTheme: AppBarTheme(
     centerTitle: true,
-    backgroundColor: Colors.deepPurple,
+    backgroundColor: Colors.deepPurple[700],
     titleTextStyle: TextStyle(color: Colors.white, fontSize: 22.sp),
   ),
 );
@@ -16,10 +16,10 @@ ThemeData lighTheme = ThemeData(
   useMaterial3: true,
   appBarTheme: AppBarTheme(
     centerTitle: true,
-    backgroundColor: Colors.deepPurple,
+    backgroundColor: Colors.deepPurple[700],
     titleTextStyle: TextStyle(color: Colors.white, fontSize: 22.sp),
     iconTheme: const IconThemeData(color: Colors.white),
   ),
 );
 
-Color primaryColor = Colors.deepPurple;
+Color? primaryColor = Colors.deepPurple[700];
