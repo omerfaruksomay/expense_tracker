@@ -138,7 +138,9 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
                                   child: Text(category.name),
                                 ))
                             .toList(),
-                        decoration: InputDecoration(labelText: 'Kategori'),
+                        decoration: const InputDecoration(
+                          labelText: 'Kategori',
+                        ),
                         validator: (value) {
                           if (value == null || value.isEmpty) {
                             return 'Lütfen bir kategori seçin.';
@@ -149,6 +151,7 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
                     ),
                   ],
                 ),
+                const SizedBox(height: 15),
                 Column(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [

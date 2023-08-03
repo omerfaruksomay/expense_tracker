@@ -29,14 +29,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
       length: tabs.length,
       child: Scaffold(
         body: Padding(
-          padding: const EdgeInsets.all(8.0),
+          padding: const EdgeInsets.only(left: 8, bottom: 8, right: 8),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               SizedBox(
                 height: 50,
                 child: TabBar(
-                  labelColor: Colors.black,
                   tabs: [
                     Tab(
                       text: tabs[0]['title'],
@@ -48,10 +47,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 ),
               ),
               Expanded(
-                child: TabBarView(children: [
-                  tabs[0]['widget'],
-                  tabs[1]['widget'],
-                ]),
+                child: TabBarView(
+                  children: [
+                    tabs[0]['widget'],
+                    tabs[1]['widget'],
+                  ],
+                ),
               ),
             ],
           ),

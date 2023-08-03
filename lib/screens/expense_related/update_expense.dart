@@ -169,6 +169,7 @@ class UpdateExpenseScreeenState extends State<UpdateExpenseScreeen> {
                     ),
                   ],
                 ),
+                const SizedBox(height: 15),
                 Column(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [

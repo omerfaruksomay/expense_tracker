@@ -20,9 +20,11 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Text(
-            welcomeMessage,
-            style: TextStyle(fontSize: 20.sp),
+          Container(
+            child: Text(
+              welcomeMessage,
+              style: TextStyle(fontSize: 22.sp),
+            ),
           ),
           TextButton(
             onPressed: () {
@@ -30,7 +32,10 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                 builder: (context) => const AddExpenseScreen(),
               ));
             },
-            child: Text(addExpenseButtonText),
+            child: Text(
+              addExpenseButtonText,
+              style: TextStyle(fontSize: 15.sp),
+            ),
           ),
         ],
       ),

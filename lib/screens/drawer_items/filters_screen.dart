@@ -71,6 +71,7 @@ class _ToggleFilterState extends State<FilterScreen> {
       body: Center(
         child: Column(
           children: [
+            SizedBox(height: 20),
             ToggleButtons(
               borderRadius: const BorderRadius.all(Radius.circular(8)),
               selectedBorderColor: Colors.deepPurple,

@@ -1,4 +1,6 @@
+import 'package:expense_tracker/theme/theme_constants.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'drawer_items/dashboard_screen.dart';
 import 'drawer_items/filters_screen.dart';
@@ -82,17 +84,23 @@ class _DrawerScreenState extends State<DrawerScreen> {
           padding: EdgeInsets.zero,
           children: [
             DrawerHeader(
+              decoration: BoxDecoration(color: primaryColor),
               child: Row(
                 children: [
-                  const Icon(
+                  Icon(
                     Icons.account_balance,
+                    color: Colors.white,
+                    size: 25.sp,
                   ),
                   const SizedBox(
                     width: 10,
                   ),
                   Text(
                     drawerMenuHeader,
-                    style: const TextStyle(),
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 25.sp,
+                    ),
                   ),
                 ],
               ),

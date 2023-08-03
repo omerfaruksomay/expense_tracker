@@ -1,8 +1,8 @@
-import 'package:expense_tracker/theme/theme_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import '/theme/theme_constants.dart';
 import 'screens/drawer_screen.dart';
 import '/models/category.dart';
 import '/models/expense.dart';
@@ -15,7 +15,7 @@ void main() async {
   //box
   var expenseBox = await Hive.openBox<Expense>('expenses');
   var catBox = await Hive.openBox<Category>('categories');
-  var themeBox = await Hive.openBox('themeBox');
+  await Hive.openBox('themeBox');
 
   if (catBox.isEmpty) {
     catBox.addAll(defaultCategories);
@@ -64,7 +64,7 @@ class _MyAppState extends State<MyApp> {
         theme: isDarkMode ? darkTheme : lighTheme,
         home: const DrawerScreen(),
       ),
-      designSize: const Size(360, 600),
+      designSize: const Size(400, 800),
     );
   }
 }
