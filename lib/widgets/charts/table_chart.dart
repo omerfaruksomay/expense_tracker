@@ -18,6 +18,16 @@ class _TableChartState extends State<TableChart> {
   late final Box categoryBox;
   late List<dynamic> _chartData;
 
+  // chunk
+  List veriler = [
+    [1, 2, 3, 4, 5],
+    [6, 7, 8, 9, 10],
+    [
+      11,
+      {'ad': "yemek", "fiyat": 123}
+    ]
+  ];
+
   List<dynamic> getChartData() {
     var chartData = expenseBox.values.toList();
     return chartData;
@@ -38,6 +48,14 @@ class _TableChartState extends State<TableChart> {
     return category.name;
   }
 
+  String formatCategoryName(String categoryName) {
+    String tempName = categoryName.toString().trim();
+    if (tempName.length > 5) {
+      return tempName.substring(0, 5) + ".";
+    }
+    return tempName;
+  }
+
   void totalAmount() {
     if (_chartData == null) {
       return;
@@ -51,8 +69,13 @@ class _TableChartState extends State<TableChart> {
         var categoryId = item.categoryId;
         var amount = item.amount;
 
-        var category = categoryBox.get(categoryId);
-        var categoryName = category.name;
+        // var category = categoryBox.get(categoryId);
+        // String categoryName = category.name.toString().trim();
+        // if (categoryName.length > 5) {
+        //   categoryName = categoryName.substring(1, 5) + ".";
+        // }
+        // categoryName = "hehe";
+        // _chartData[i].categoryName = "hehe";
 
         if (categoryExpenses.containsKey(categoryId)) {
           categoryExpenses[categoryId] =
@@ -83,7 +106,7 @@ class _TableChartState extends State<TableChart> {
           color: primaryColor,
           dataSource: _chartData,
           xValueMapper: (data, index) {
-            return _chartData[index].categoryName;
+            return formatCategoryName(_chartData[index].categoryName);
           },
           yValueMapper: (data, index) => data.amount,
         ),

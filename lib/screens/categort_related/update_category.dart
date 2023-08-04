@@ -94,7 +94,7 @@ class _UpdateCategoryScreenState extends State<UpdateCategoryScreen> {
                     child: const Text('Cancel'),
                   ),
                   const SizedBox(width: 15),
-                  ElevatedButton(
+                  FilledButton(
                     onPressed: () {
                       if (_categoryFormKey.currentState!.validate()) {
                         _updateCategory();

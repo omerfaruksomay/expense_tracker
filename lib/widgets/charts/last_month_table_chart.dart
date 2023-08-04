@@ -47,6 +47,14 @@ class _TableChartState extends State<LastMonthTableChart> {
         .toList();
   }
 
+  String formatCategoryName(String categoryName) {
+    String tempName = categoryName.toString().trim();
+    if (tempName.length > 5) {
+      return tempName.substring(0, 5) + ".";
+    }
+    return tempName;
+  }
+
   void totalAmount() {
     if (_chartData == null) {
       return;
@@ -60,9 +68,6 @@ class _TableChartState extends State<LastMonthTableChart> {
       if (item != null) {
         var categoryId = item.categoryId;
         var amount = item.amount;
-
-        var category = categoryBox.get(categoryId);
-        var categoryName = category.name;
 
         if (categoryExpenses.containsKey(categoryId)) {
           categoryExpenses[categoryId] =
@@ -93,7 +98,7 @@ class _TableChartState extends State<LastMonthTableChart> {
           color: primaryColor,
           dataSource: _chartData,
           xValueMapper: (data, index) {
-            return _chartData[index].categoryName;
+            return formatCategoryName(_chartData[index].categoryName);
           },
           yValueMapper: (data, index) => data.amount,
         ),

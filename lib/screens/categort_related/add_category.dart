@@ -1,3 +1,4 @@
+import 'package:expense_tracker/theme/theme_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:expense_tracker/models/category.dart';
