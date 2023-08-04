@@ -50,7 +50,6 @@ class _ToggleFilterState extends State<FilterScreen> {
 
   _deleteExpense(int index) {
     expenseBox.deleteAt(index);
-    print('İtem Deleted');
     return ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
         duration: Duration(seconds: 3),
@@ -73,7 +72,7 @@ class _ToggleFilterState extends State<FilterScreen> {
       body: Center(
         child: Column(
           children: [
-            SizedBox(height: 25),
+            const SizedBox(height: 25),
             ToggleButtons(
               borderRadius: const BorderRadius.all(Radius.circular(8)),
               selectedBorderColor: Colors.deepPurple,
@@ -88,7 +87,7 @@ class _ToggleFilterState extends State<FilterScreen> {
               isSelected: _selectedFilters,
               children: filters,
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             ValueListenableBuilder(
               valueListenable: expenseBox.listenable(),
               builder: (context, Box box, child) {

@@ -50,9 +50,6 @@ class _PieChartState extends State<PieChart> {
         var categoryId = item.categoryId;
         var amount = item.amount;
 
-        var category = categoryBox.get(categoryId);
-        var categoryName = category.name;
-
         if (categoryExpenses.containsKey(categoryId)) {
           categoryExpenses[categoryId] =
               (categoryExpenses[categoryId] ?? 0) + amount;
@@ -85,7 +82,7 @@ class _PieChartState extends State<PieChart> {
           dataSource: _chartData,
           xValueMapper: (data, index) => _chartData[index].categoryName,
           yValueMapper: (data, index) => _chartData[index].amount,
-          dataLabelSettings: DataLabelSettings(isVisible: true),
+          dataLabelSettings: const DataLabelSettings(isVisible: true),
         ),
       ],
     );

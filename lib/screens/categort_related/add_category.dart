@@ -1,4 +1,3 @@
-import 'package:expense_tracker/theme/theme_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:expense_tracker/models/category.dart';
@@ -77,7 +76,7 @@ class _AddCategoryScreenState extends State<AddCategoryScreen> {
                     },
                     child: const Text('Cancel'),
                   ),
-                  SizedBox(width: 15),
+                  const SizedBox(width: 15),
                   FilledButton(
                     onPressed: _addCategory,
                     child: const Text('Save'),

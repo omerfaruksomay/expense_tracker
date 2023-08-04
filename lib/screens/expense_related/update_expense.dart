@@ -158,7 +158,8 @@ class UpdateExpenseScreeenState extends State<UpdateExpenseScreeen> {
                                   child: Text(category.name),
                                 ))
                             .toList(),
-                        decoration: InputDecoration(labelText: 'Kategori'),
+                        decoration:
+                            const InputDecoration(labelText: 'Kategori'),
                         validator: (value) {
                           if (value == null || value.isEmpty) {
                             return 'Lütfen bir kategori seçin.';

@@ -29,7 +29,7 @@ class _ExpensesScreenState extends State<ExpensesScreen> {
 
   _deleteExpense(int index) {
     expenseBox.deleteAt(index);
-    print('İtem Deleted');
+
     return ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
         duration: Duration(seconds: 3),
