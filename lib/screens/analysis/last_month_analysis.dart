@@ -16,14 +16,14 @@ class _LastMonthAnalysisState extends State<LastMonthAnalysis> {
   Widget build(BuildContext context) {
     return CarouselSlider(
       options: CarouselOptions(
-          aspectRatio: 1.0,
+          aspectRatio: 0.4,
           enlargeCenterPage: true,
           initialPage: 0,
           enableInfiniteScroll: false,
-          enlargeFactor: 0.4),
+          enlargeFactor: 0.32),
       items: const [
-        LastMonthTableChart(),
-        LastMonthPieChart(),
+        Expanded(child: LastMonthTableChart()),
+        Expanded(child: LastMonthPieChart()),
       ],
     );
   }
