@@ -4,7 +4,7 @@ import 'package:hive_flutter/hive_flutter.dart';
 
 import '/models/category.dart';
 import 'add_category.dart';
-import '/screens/categort_related/update_category.dart';
+import '/screens/category_related/update_category.dart';
 
 class CategoriesScreen extends StatefulWidget {
   const CategoriesScreen({super.key});

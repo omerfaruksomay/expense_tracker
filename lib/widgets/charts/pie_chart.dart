@@ -17,10 +17,9 @@ class _PieChartState extends State<PieChart> {
   late final Box categoryBox;
   late List<dynamic> _chartData;
 
-  List<dynamic> getChartData() {
-    var chartData = expenseBox.values.toList();
-    return chartData;
-  }
+
+  List<dynamic> categoryExpenses = [];
+
 
   @override
   void initState() {
@@ -28,45 +27,30 @@ class _PieChartState extends State<PieChart> {
     super.initState();
     expenseBox = Hive.box<Expense>('expenses');
     categoryBox = Hive.box<Category>('categories');
-    _chartData = getChartData();
-    totalAmount();
+     getChartData();
   }
 
-  String getCategoryName(int categoryId) {
-    var category = categoryBox.get(categoryId);
-    return category.name;
-  }
-
-  void totalAmount() {
-    if (_chartData == null) {
-      return;
+   getChartData(){
+    for (var categories in categoryBox.values) {
+      categoryExpenses.add({'id':categories.id,'name':categories.name,'amount':0});
     }
+ 
+    
+    for (var expenses in expenseBox.values) {
+      var amount = expenses.amount;
+      var catId = expenses.categoryId;
 
-    Map<int, num> categoryExpenses = {};
-
-    for (var i = 0; i < _chartData.length; i++) {
-      var item = _chartData[i];
-      if (item != null) {
-        var categoryId = item.categoryId;
-        var amount = item.amount;
-
-        if (categoryExpenses.containsKey(categoryId)) {
-          categoryExpenses[categoryId] =
-              (categoryExpenses[categoryId] ?? 0) + amount;
-        } else {
-          categoryExpenses[categoryId] = amount;
+      for (var catExpenses in categoryExpenses) {
+        if(catExpenses['id']==catId){
+            catExpenses['amount'] += amount;
         }
       }
     }
-
-    final List<ChartData> chartData = categoryExpenses.entries
-        .map((entry) =>
-            ChartData(entry.key, entry.value, getCategoryName(entry.key)))
-        .toList();
-
+    
     setState(() {
-      _chartData = chartData;
+      _chartData = categoryExpenses;
     });
+
   }
 
   @override
@@ -80,8 +64,8 @@ class _PieChartState extends State<PieChart> {
         PieSeries<dynamic, dynamic>(
           explode: true,
           dataSource: _chartData,
-          xValueMapper: (data, index) => _chartData[index].categoryName,
-          yValueMapper: (data, index) => _chartData[index].amount,
+          xValueMapper: (data, index) => _chartData[index]['name'],
+          yValueMapper: (data, index) => _chartData[index]['amount'],
           dataLabelSettings: const DataLabelSettings(isVisible: true),
         ),
       ],

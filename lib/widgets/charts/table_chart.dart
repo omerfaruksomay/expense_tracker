@@ -16,22 +16,14 @@ class TableChart extends StatefulWidget {
 class _TableChartState extends State<TableChart> {
   late final Box expenseBox;
   late final Box categoryBox;
-  late List<dynamic> _chartData;
 
-  // chunk
-  List veriler = [
-    [1, 2, 3, 4, 5],
-    [6, 7, 8, 9, 10],
-    [
-      11,
-      {'ad': "yemek", "fiyat": 123}
-    ]
-  ];
 
-  List<dynamic> getChartData() {
-    var chartData = expenseBox.values.toList();
-    return chartData;
-  }
+
+   late List<dynamic> _chartData;
+
+
+   List<dynamic> categoryExpenses = [];
+
 
   @override
   void initState() {
@@ -39,66 +31,88 @@ class _TableChartState extends State<TableChart> {
     super.initState();
     expenseBox = Hive.box<Expense>('expenses');
     categoryBox = Hive.box<Category>('categories');
-    _chartData = getChartData();
-    totalAmount();
+     getChartData();
   }
 
-  String getCategoryName(int categoryId) {
-    var category = categoryBox.get(categoryId);
-    return category.name;
-  }
-
-  String formatCategoryName(String categoryName) {
-    String tempName = categoryName.toString().trim();
-    if (tempName.length > 5) {
-      return tempName.substring(0, 5) + ".";
+   getChartData(){
+    for (var categories in categoryBox.values) {
+      categoryExpenses.add({'id':categories.id,'name':categories.name,'amount':0});
     }
-    return tempName;
-  }
+ 
+    
+    for (var expenses in expenseBox.values) {
+      var amount = expenses.amount;
+      var catId = expenses.categoryId;
 
-  void totalAmount() {
-    if (_chartData == null) {
-      return;
-    }
-
-    Map<int, num> categoryExpenses = {};
-
-    for (var i = 0; i < _chartData.length; i++) {
-      var item = _chartData[i];
-      if (item != null) {
-        var categoryId = item.categoryId;
-        var amount = item.amount;
-
-        // var category = categoryBox.get(categoryId);
-        // String categoryName = category.name.toString().trim();
-        // if (categoryName.length > 5) {
-        //   categoryName = categoryName.substring(1, 5) + ".";
-        // }
-        // categoryName = "hehe";
-        // _chartData[i].categoryName = "hehe";
-
-        if (categoryExpenses.containsKey(categoryId)) {
-          categoryExpenses[categoryId] =
-              (categoryExpenses[categoryId] ?? 0) + amount;
-        } else {
-          categoryExpenses[categoryId] = amount;
+      for (var catExpenses in categoryExpenses) {
+        if(catExpenses['id']==catId){
+            catExpenses['amount'] += amount;
         }
       }
     }
-
-    final List<ChartData> chartData = categoryExpenses.entries
-        .map((entry) =>
-            ChartData(entry.key, entry.value, getCategoryName(entry.key)))
-        .toList();
-
+    
     setState(() {
-      _chartData = chartData;
+      _chartData = categoryExpenses;
     });
+
   }
+
+  // String getCategoryName(int categoryId) {
+  //   var category = categoryBox.get(categoryId);
+  //   return category.name;
+  // }
+
+  // String formatCategoryName(String categoryName) {
+  //   String tempName = categoryName.toString().trim();
+  //   if (tempName.length > 5) {
+  //     return tempName.substring(0, 5) + ".";
+  //   }
+  //   return tempName;
+  // }
+
+  // void totalAmount() {
+  //   if (_chartData == null) {
+  //     return;
+  //   }
+
+  //   Map<int, num> categoryExpenses = {};
+
+  //   for (var i = 0; i < _chartData.length; i++) {
+  //     var item = _chartData[i];
+  //     if (item != null) {
+  //       var categoryId = item.categoryId;
+  //       var amount = item.amount;
+
+  //       // var category = categoryBox.get(categoryId);
+  //       // String categoryName = category.name.toString().trim();
+  //       // if (categoryName.length > 5) {
+  //       //   categoryName = categoryName.substring(1, 5) + ".";
+  //       // }
+  //       // categoryName = "hehe";
+  //       // _chartData[i].categoryName = "hehe";
+
+  //       if (categoryExpenses.containsKey(categoryId)) {
+  //         categoryExpenses[categoryId] =
+  //             (categoryExpenses[categoryId] ?? 0) + amount;
+  //       } else {
+  //         categoryExpenses[categoryId] = amount;
+  //       }
+  //     }
+  //   }
+
+  //   final List<ChartData> chartData = categoryExpenses.entries
+  //       .map((entry) =>
+  //           ChartData(entry.key, entry.value, getCategoryName(entry.key)))
+  //       .toList();
+
+  //   setState(() {
+  //     _chartData = chartData;
+  //   });
+  // }
 
   @override
   Widget build(BuildContext context) {
-    return SfCartesianChart(
+     return SfCartesianChart(
       primaryXAxis: CategoryAxis(),
       primaryYAxis: NumericAxis(),
       series: <ChartSeries>[
@@ -106,11 +120,16 @@ class _TableChartState extends State<TableChart> {
           color: primaryColor,
           dataSource: _chartData,
           xValueMapper: (data, index) {
-            return formatCategoryName(_chartData[index].categoryName);
+            return (_chartData[index]['name']);
           },
-          yValueMapper: (data, index) => data.amount,
+          yValueMapper: (data, index) => _chartData[index]['amount'],
         ),
       ],
-    );
+    )
+     ;
   }
 }
+
+
+
+
