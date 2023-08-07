@@ -16,13 +16,9 @@ class _TableChartState extends State<LastMonthPieChart> {
   late final Box expenseBox;
   late final Box categoryBox;
 
+  late List<dynamic> _chartData;
 
-
-   late List<dynamic> _chartData;
-
-
-   List<dynamic> categoryExpenses = [];
-
+  List<dynamic> categoryExpenses = [];
 
   @override
   void initState() {
@@ -30,41 +26,37 @@ class _TableChartState extends State<LastMonthPieChart> {
     super.initState();
     expenseBox = Hive.box<Expense>('expenses');
     categoryBox = Hive.box<Category>('categories');
-     getChartData();
+    getChartData();
   }
 
-   getChartData(){
-
-     DateTime now = DateTime.now();
+  getChartData() {
+    DateTime now = DateTime.now();
     DateTime lastMonth = DateTime(now.year, now.month - 1, now.day);
 
-   var lastMonthExpenses =expenseBox.values.where((expense) => expense.date.isAfter(lastMonth)).toList();
-
+    var lastMonthExpenses = expenseBox.values
+        .where((expense) => expense.date.isAfter(lastMonth))
+        .toList();
 
     for (var categories in categoryBox.values) {
-      categoryExpenses.add({'id':categories.id,'name':categories.name,'amount':0});
+      categoryExpenses
+          .add({'id': categories.id, 'name': categories.name, 'amount': 0});
     }
 
-   
-
-    
     for (var expenses in lastMonthExpenses) {
       var amount = expenses.amount;
       var catId = expenses.categoryId;
 
       for (var catExpenses in categoryExpenses) {
-        if(catExpenses['id']==catId){
-            catExpenses['amount'] += amount;
+        if (catExpenses['id'] == catId) {
+          catExpenses['amount'] += amount;
         }
       }
     }
-    
+
     setState(() {
       _chartData = categoryExpenses;
     });
-
   }
-
 
   @override
   Widget build(BuildContext context) {

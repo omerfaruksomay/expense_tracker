@@ -63,41 +63,27 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                   child: SlideAnimation(
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
-                      child: Stack(
-                        children: [
-                          Positioned.fill(
-                            child: Builder(
-                              builder: (context) => Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 10.0),
-                                child: Container(color: Colors.red),
+                      child: Container(
+                        padding: const EdgeInsets.all(15),
+                        decoration: BoxDecoration(
+                            color:
+                                Theme.of(context).colorScheme.primaryContainer,
+                            borderRadius: BorderRadius.circular(10)),
+                        child: InkWell(
+                          onTap: () {
+                            Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) => UpdateCategoryScreen(
+                                id: categories[index].id,
+                                index: index,
+                                category: categories,
+                                nameController: categories[index].name,
                               ),
-                            ),
+                            ));
+                          },
+                          child: ListTile(
+                            title: Text(categories[index].name),
                           ),
-                          Container(
-                            padding: const EdgeInsets.all(15),
-                            decoration: BoxDecoration(
-                                color: Theme.of(context)
-                                    .colorScheme
-                                    .primaryContainer,
-                                borderRadius: BorderRadius.circular(10)),
-                            child: InkWell(
-                              onTap: () {
-                                Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (context) => UpdateCategoryScreen(
-                                    id: categories[index].id,
-                                    index: index,
-                                    category: categories,
-                                    nameController: categories[index].name,
-                                  ),
-                                ));
-                              },
-                              child: ListTile(
-                                title: Text(categories[index].name),
-                              ),
-                            ),
-                          ),
-                        ],
+                        ),
                       ),
                     ),
                   ),

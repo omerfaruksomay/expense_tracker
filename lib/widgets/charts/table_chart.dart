@@ -17,13 +17,9 @@ class _TableChartState extends State<TableChart> {
   late final Box expenseBox;
   late final Box categoryBox;
 
+  late List<dynamic> _chartData;
 
-
-   late List<dynamic> _chartData;
-
-
-   List<dynamic> categoryExpenses = [];
-
+  List<dynamic> categoryExpenses = [];
 
   @override
   void initState() {
@@ -31,53 +27,86 @@ class _TableChartState extends State<TableChart> {
     super.initState();
     expenseBox = Hive.box<Expense>('expenses');
     categoryBox = Hive.box<Category>('categories');
-     getChartData();
+    getChartData();
   }
 
-   getChartData(){
+  void getChartData() {
     for (var categories in categoryBox.values) {
-      categoryExpenses.add({'id':categories.id,'name':categories.name,'amount':0});
+      categoryExpenses
+          .add({'id': categories.id, 'name': categories.name, 'amount': 0});
     }
- 
-    
+
     for (var expenses in expenseBox.values) {
       var amount = expenses.amount;
       var catId = expenses.categoryId;
 
       for (var catExpenses in categoryExpenses) {
-        if(catExpenses['id']==catId){
-            catExpenses['amount'] += amount;
+        if (catExpenses['id'] == catId) {
+          catExpenses['amount'] += amount;
         }
       }
     }
-    
+
     setState(() {
       _chartData = categoryExpenses;
     });
-
   }
 
- 
+  List<List<dynamic>> _groupedChartData(List<dynamic> chartData) {
+    List<List<dynamic>> groupedCharts = [];
+    const int groupSize = 4;
+
+    for (var i = 0; i < chartData.length; i += groupSize) {
+      if (i + groupSize > chartData.length) {
+        groupedCharts.add(chartData.sublist(i, chartData.length));
+      } else {
+        groupedCharts.add(chartData.sublist(i, i + groupSize));
+      }
+    }
+
+    return groupedCharts;
+  }
+
   @override
   Widget build(BuildContext context) {
-     return SfCartesianChart(
-      primaryXAxis: CategoryAxis(),
-      primaryYAxis: NumericAxis(),
-      series: <ChartSeries>[
-        ColumnSeries(
-          color: primaryColor,
-          dataSource: _chartData,
-          xValueMapper: (data, index) {
-            return (_chartData[index]['name']);
-          },
-          yValueMapper: (data, index) => _chartData[index]['amount'],
-        ),
-      ],
-    )
-     ;
+    List<List<dynamic>> groupedChartData = _groupedChartData(_chartData);
+    print(groupedChartData);
+    return Expanded(
+      child: Column(
+        children: [
+          SizedBox(height: 15),
+          const Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text('Swipe right to see pie chart'),
+              Icon(Icons.arrow_right),
+            ],
+          ),
+          const SizedBox(height: 15),
+          Expanded(
+            child: ListView.builder(
+              itemCount: groupedChartData.length,
+              itemBuilder: (context, index) {
+                final chartData = groupedChartData[index];
+                return SfCartesianChart(
+                  primaryXAxis: CategoryAxis(),
+                  primaryYAxis: NumericAxis(),
+                  series: <ChartSeries>[
+                    ColumnSeries(
+                      color: primaryColor,
+                      dataSource: chartData,
+                      xValueMapper: (data, _) => data['name'].toString(),
+                      yValueMapper: (data, _) => data['amount'],
+                      dataLabelSettings:
+                          const DataLabelSettings(isVisible: true),
+                    ),
+                  ],
+                );
+              },
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }
-
-
-
-

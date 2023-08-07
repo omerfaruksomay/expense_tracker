@@ -16,15 +16,15 @@ class _OverallAnalysisState extends State<OverallAnalysis> {
   Widget build(BuildContext context) {
     return CarouselSlider(
       options: CarouselOptions(
-        aspectRatio: 1.0,
+        aspectRatio: 0.4,
         enlargeCenterPage: true,
         initialPage: 0,
         enableInfiniteScroll: false,
-        enlargeFactor: 0.5,
+        enlargeFactor: 0.33,
       ),
       items: const [
-        TableChart(),
-        PieChart(),
+        Expanded(child: TableChart()),
+        Expanded(child: PieChart()),
       ],
     );
   }

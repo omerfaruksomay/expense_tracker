@@ -14,11 +14,15 @@ class _DashboardScreenState extends State<DashboardScreen> {
   List tabs = [
     {
       'title': 'Overall',
-      'widget': const OverallAnalysis(),
+      'widget': const Expanded(
+        child: OverallAnalysis(),
+      ),
     },
     {
       'title': 'Last Month',
-      'widget': const LastMonthAnalysis(),
+      'widget': const Expanded(
+        child: LastMonthAnalysis(),
+      ),
     },
   ];
 

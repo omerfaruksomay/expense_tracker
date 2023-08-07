@@ -17,13 +17,9 @@ class _TableChartState extends State<LastMonthTableChart> {
   late final Box expenseBox;
   late final Box categoryBox;
 
+  late List<dynamic> _chartData;
 
-
-   late List<dynamic> _chartData;
-
-
-   List<dynamic> categoryExpenses = [];
-
+  List<dynamic> categoryExpenses = [];
 
   @override
   void initState() {
@@ -31,70 +27,90 @@ class _TableChartState extends State<LastMonthTableChart> {
     super.initState();
     expenseBox = Hive.box<Expense>('expenses');
     categoryBox = Hive.box<Category>('categories');
-     getChartData();
+    getChartData();
   }
 
-   getChartData(){
-
-     DateTime now = DateTime.now();
+  void getChartData() {
+    DateTime now = DateTime.now();
     DateTime lastMonth = DateTime(now.year, now.month - 1, now.day);
 
-   var lastMonthExpenses =expenseBox.values.where((expense) => expense.date.isAfter(lastMonth)).toList();
-
+    var lastMonthExpenses = expenseBox.values
+        .where((expense) => expense.date.isAfter(lastMonth))
+        .toList();
 
     for (var categories in categoryBox.values) {
-      categoryExpenses.add({'id':categories.id,'name':categories.name,'amount':0});
+      categoryExpenses
+          .add({'id': categories.id, 'name': categories.name, 'amount': 0});
     }
 
-   
-
-    
     for (var expenses in lastMonthExpenses) {
       var amount = expenses.amount;
       var catId = expenses.categoryId;
 
       for (var catExpenses in categoryExpenses) {
-        if(catExpenses['id']==catId){
-            catExpenses['amount'] += amount;
+        if (catExpenses['id'] == catId) {
+          catExpenses['amount'] += amount;
         }
       }
     }
-    
+
     setState(() {
       _chartData = categoryExpenses;
     });
-
   }
 
- 
+  List<List<dynamic>> _groupedChartData(List<dynamic> chartData) {
+    List<List<dynamic>> groupedCharts = [];
+    const int groupSize = 4;
+
+    for (var i = 0; i < chartData.length; i += groupSize) {
+      if (i + groupSize > chartData.length) {
+        groupedCharts.add(chartData.sublist(i, chartData.length));
+      } else {
+        groupedCharts.add(chartData.sublist(i, i + groupSize));
+      }
+    }
+
+    return groupedCharts;
+  }
+
   @override
   Widget build(BuildContext context) {
-     return SfCartesianChart(
-      primaryXAxis: CategoryAxis(),
-      primaryYAxis: NumericAxis(),
-      series: <ChartSeries>[
-        ColumnSeries(
-          color: primaryColor,
-          dataSource: _chartData,
-          xValueMapper: (data, index) {
-            return (_chartData[index]['name']);
-          },
-          yValueMapper: (data, index) => _chartData[index]['amount'],
+    List<List<dynamic>> groupedChartData = _groupedChartData(_chartData);
+    print(groupedChartData);
+    return Column(
+      children: [
+        SizedBox(height: 15),
+        const Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text('Swipe right to see pie chart'),
+            Icon(Icons.arrow_right),
+          ],
+        ),
+        const SizedBox(height: 15),
+        Expanded(
+          child: ListView.builder(
+            itemCount: groupedChartData.length,
+            itemBuilder: (context, index) {
+              final chartData = groupedChartData[index];
+              return SfCartesianChart(
+                primaryXAxis: CategoryAxis(),
+                primaryYAxis: NumericAxis(),
+                series: <ChartSeries>[
+                  ColumnSeries(
+                    color: primaryColor,
+                    dataSource: chartData,
+                    xValueMapper: (data, _) => data['name'].toString(),
+                    yValueMapper: (data, _) => data['amount'],
+                    dataLabelSettings: const DataLabelSettings(isVisible: true),
+                  ),
+                ],
+              );
+            },
+          ),
         ),
       ],
-    )
-     ;
+    );
   }
 }
-
-
-
-
-  // List<dynamic> getLastMonthExpenses(List<dynamic> expenses) {
-  //   final DateTime now = DateTime.now();
-  //   final DateTime lastMonth = DateTime(now.year, now.month - 1, now.day);
-
-  //   return expenses
-  //       .where((expense) => expense.date.isAfter(lastMonth))
-  //       .toList();
-  // }

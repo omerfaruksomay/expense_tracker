@@ -15,11 +15,10 @@ class PieChart extends StatefulWidget {
 class _PieChartState extends State<PieChart> {
   late final Box expenseBox;
   late final Box categoryBox;
+
   late List<dynamic> _chartData;
 
-
   List<dynamic> categoryExpenses = [];
-
 
   @override
   void initState() {
@@ -27,46 +26,57 @@ class _PieChartState extends State<PieChart> {
     super.initState();
     expenseBox = Hive.box<Expense>('expenses');
     categoryBox = Hive.box<Category>('categories');
-     getChartData();
+    getChartData();
   }
 
-   getChartData(){
+  getChartData() {
     for (var categories in categoryBox.values) {
-      categoryExpenses.add({'id':categories.id,'name':categories.name,'amount':0});
+      categoryExpenses
+          .add({'id': categories.id, 'name': categories.name, 'amount': 0});
     }
- 
-    
+
     for (var expenses in expenseBox.values) {
       var amount = expenses.amount;
       var catId = expenses.categoryId;
 
       for (var catExpenses in categoryExpenses) {
-        if(catExpenses['id']==catId){
-            catExpenses['amount'] += amount;
+        if (catExpenses['id'] == catId) {
+          catExpenses['amount'] += amount;
         }
       }
     }
-    
+
     setState(() {
       _chartData = categoryExpenses;
     });
-
   }
 
   @override
   Widget build(BuildContext context) {
-    return SfCircularChart(
-      legend: const Legend(
-          isVisible: true,
-          overflowMode: LegendItemOverflowMode.wrap,
-          position: LegendPosition.left),
-      series: <CircularSeries>[
-        PieSeries<dynamic, dynamic>(
-          explode: true,
-          dataSource: _chartData,
-          xValueMapper: (data, index) => _chartData[index]['name'],
-          yValueMapper: (data, index) => _chartData[index]['amount'],
-          dataLabelSettings: const DataLabelSettings(isVisible: true),
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        const Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(Icons.arrow_left),
+            Text('Swipe left to see column chart'),
+          ],
+        ),
+        SfCircularChart(
+          legend: const Legend(
+              isVisible: true,
+              overflowMode: LegendItemOverflowMode.wrap,
+              position: LegendPosition.left),
+          series: <CircularSeries>[
+            PieSeries<dynamic, dynamic>(
+              explode: true,
+              dataSource: _chartData,
+              xValueMapper: (data, index) => _chartData[index]['name'],
+              yValueMapper: (data, index) => _chartData[index]['amount'],
+              dataLabelSettings: const DataLabelSettings(isVisible: true),
+            ),
+          ],
         ),
       ],
     );
