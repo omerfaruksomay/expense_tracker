@@ -57,59 +57,7 @@ class _TableChartState extends State<TableChart> {
 
   }
 
-  // String getCategoryName(int categoryId) {
-  //   var category = categoryBox.get(categoryId);
-  //   return category.name;
-  // }
-
-  // String formatCategoryName(String categoryName) {
-  //   String tempName = categoryName.toString().trim();
-  //   if (tempName.length > 5) {
-  //     return tempName.substring(0, 5) + ".";
-  //   }
-  //   return tempName;
-  // }
-
-  // void totalAmount() {
-  //   if (_chartData == null) {
-  //     return;
-  //   }
-
-  //   Map<int, num> categoryExpenses = {};
-
-  //   for (var i = 0; i < _chartData.length; i++) {
-  //     var item = _chartData[i];
-  //     if (item != null) {
-  //       var categoryId = item.categoryId;
-  //       var amount = item.amount;
-
-  //       // var category = categoryBox.get(categoryId);
-  //       // String categoryName = category.name.toString().trim();
-  //       // if (categoryName.length > 5) {
-  //       //   categoryName = categoryName.substring(1, 5) + ".";
-  //       // }
-  //       // categoryName = "hehe";
-  //       // _chartData[i].categoryName = "hehe";
-
-  //       if (categoryExpenses.containsKey(categoryId)) {
-  //         categoryExpenses[categoryId] =
-  //             (categoryExpenses[categoryId] ?? 0) + amount;
-  //       } else {
-  //         categoryExpenses[categoryId] = amount;
-  //       }
-  //     }
-  //   }
-
-  //   final List<ChartData> chartData = categoryExpenses.entries
-  //       .map((entry) =>
-  //           ChartData(entry.key, entry.value, getCategoryName(entry.key)))
-  //       .toList();
-
-  //   setState(() {
-  //     _chartData = chartData;
-  //   });
-  // }
-
+ 
   @override
   Widget build(BuildContext context) {
      return SfCartesianChart(

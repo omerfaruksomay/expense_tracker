@@ -16,12 +16,14 @@ class LastMonthTableChart extends StatefulWidget {
 class _TableChartState extends State<LastMonthTableChart> {
   late final Box expenseBox;
   late final Box categoryBox;
-  late List<dynamic> _chartData;
 
-  List<dynamic> getChartData() {
-    var chartData = expenseBox.values.toList();
-    return chartData;
-  }
+
+
+   late List<dynamic> _chartData;
+
+
+   List<dynamic> categoryExpenses = [];
+
 
   @override
   void initState() {
@@ -29,68 +31,45 @@ class _TableChartState extends State<LastMonthTableChart> {
     super.initState();
     expenseBox = Hive.box<Expense>('expenses');
     categoryBox = Hive.box<Category>('categories');
-    _chartData = getChartData();
-    totalAmount();
+     getChartData();
   }
 
-  String getCategoryName(int categoryId) {
-    var category = categoryBox.get(categoryId);
-    return category.name;
-  }
+   getChartData(){
 
-  List<dynamic> getLastMonthExpenses(List<dynamic> expenses) {
-    final DateTime now = DateTime.now();
-    final DateTime lastMonth = DateTime(now.year, now.month - 1, now.day);
+     DateTime now = DateTime.now();
+    DateTime lastMonth = DateTime(now.year, now.month - 1, now.day);
 
-    return expenses
-        .where((expense) => expense.date.isAfter(lastMonth))
-        .toList();
-  }
+   var lastMonthExpenses =expenseBox.values.where((expense) => expense.date.isAfter(lastMonth)).toList();
 
-  String formatCategoryName(String categoryName) {
-    String tempName = categoryName.toString().trim();
-    if (tempName.length > 5) {
-      return tempName.substring(0, 5) + ".";
-    }
-    return tempName;
-  }
 
-  void totalAmount() {
-    if (_chartData == null) {
-      return;
+    for (var categories in categoryBox.values) {
+      categoryExpenses.add({'id':categories.id,'name':categories.name,'amount':0});
     }
 
-    List<dynamic> lastMonthExpenses = getLastMonthExpenses(_chartData);
-    Map<int, num> categoryExpenses = {};
+   
 
-    for (var i = 0; i < lastMonthExpenses.length; i++) {
-      var item = lastMonthExpenses[i];
-      if (item != null) {
-        var categoryId = item.categoryId;
-        var amount = item.amount;
+    
+    for (var expenses in lastMonthExpenses) {
+      var amount = expenses.amount;
+      var catId = expenses.categoryId;
 
-        if (categoryExpenses.containsKey(categoryId)) {
-          categoryExpenses[categoryId] =
-              (categoryExpenses[categoryId] ?? 0) + amount;
-        } else {
-          categoryExpenses[categoryId] = amount;
+      for (var catExpenses in categoryExpenses) {
+        if(catExpenses['id']==catId){
+            catExpenses['amount'] += amount;
         }
       }
     }
-
-    final List<ChartData> chartData = categoryExpenses.entries
-        .map((entry) =>
-            ChartData(entry.key, entry.value, getCategoryName(entry.key)))
-        .toList();
-
+    
     setState(() {
-      _chartData = chartData;
+      _chartData = categoryExpenses;
     });
+
   }
 
+ 
   @override
   Widget build(BuildContext context) {
-    return SfCartesianChart(
+     return SfCartesianChart(
       primaryXAxis: CategoryAxis(),
       primaryYAxis: NumericAxis(),
       series: <ChartSeries>[
@@ -98,11 +77,24 @@ class _TableChartState extends State<LastMonthTableChart> {
           color: primaryColor,
           dataSource: _chartData,
           xValueMapper: (data, index) {
-            return formatCategoryName(_chartData[index].categoryName);
+            return (_chartData[index]['name']);
           },
-          yValueMapper: (data, index) => data.amount,
+          yValueMapper: (data, index) => _chartData[index]['amount'],
         ),
       ],
-    );
+    )
+     ;
   }
 }
+
+
+
+
+  // List<dynamic> getLastMonthExpenses(List<dynamic> expenses) {
+  //   final DateTime now = DateTime.now();
+  //   final DateTime lastMonth = DateTime(now.year, now.month - 1, now.day);
+
+  //   return expenses
+  //       .where((expense) => expense.date.isAfter(lastMonth))
+  //       .toList();
+  // }
