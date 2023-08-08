@@ -22,8 +22,8 @@ class _LastMonthAnalysisState extends State<LastMonthAnalysis> {
           enableInfiniteScroll: false,
           enlargeFactor: 0.32),
       items: const [
-        Expanded(child: LastMonthTableChart()),
-        Expanded(child: LastMonthPieChart()),
+        LastMonthTableChart(),
+        LastMonthPieChart(),
       ],
     );
   }

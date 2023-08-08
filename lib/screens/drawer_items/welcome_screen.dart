@@ -1,5 +1,7 @@
+import 'package:expense_tracker/widgets/showcase.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:showcaseview/showcaseview.dart';
 
 import '../expense_related/add_expense.dart';
 
@@ -14,6 +16,17 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   String welcomeMessage = 'Welcome the Expense Tracker App !';
   String addExpenseButtonText = 'Lets Add Some Expense';
 
+  final GlobalKey globalKeyAddButton = GlobalKey();
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ShowCaseWidget.of(context).startShowCase([globalKeyAddButton]);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Center(
@@ -26,15 +39,20 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
               style: TextStyle(fontSize: 22.sp),
             ),
           ),
-          TextButton(
-            onPressed: () {
-              Navigator.of(context).push(MaterialPageRoute(
-                builder: (context) => const AddExpenseScreen(),
-              ));
-            },
-            child: Text(
-              addExpenseButtonText,
-              style: TextStyle(fontSize: 15.sp),
+          ShowcaseWidget(
+            desc: 'Touch to add some Expense',
+            title: 'Add expense',
+            globalKey: globalKeyAddButton,
+            child: TextButton(
+              onPressed: () {
+                Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => const AddExpenseScreen(),
+                ));
+              },
+              child: Text(
+                addExpenseButtonText,
+                style: TextStyle(fontSize: 15.sp),
+              ),
             ),
           ),
         ],

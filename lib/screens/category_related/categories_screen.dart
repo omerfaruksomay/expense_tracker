@@ -1,6 +1,8 @@
+import 'package:expense_tracker/widgets/showcase.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:showcaseview/showcaseview.dart';
 
 import '/models/category.dart';
 import 'add_category.dart';
@@ -16,11 +18,16 @@ class CategoriesScreen extends StatefulWidget {
 class _CategoriesScreenState extends State<CategoriesScreen> {
   late final Box categoryBox;
 
+  final GlobalKey globalKey = GlobalKey();
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     categoryBox = Hive.box<Category>('categories');
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ShowCaseWidget.of(context).startShowCase([globalKey]);
+    });
   }
 
   @override
@@ -59,29 +66,35 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
               itemBuilder: (context, index) {
                 return AnimationConfiguration.staggeredList(
                   position: index,
-                  duration: const Duration(milliseconds: 500),
+                  duration: const Duration(milliseconds: 375),
                   child: SlideAnimation(
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Container(
-                        padding: const EdgeInsets.all(15),
-                        decoration: BoxDecoration(
-                            color:
-                                Theme.of(context).colorScheme.primaryContainer,
-                            borderRadius: BorderRadius.circular(10)),
-                        child: InkWell(
-                          onTap: () {
-                            Navigator.of(context).push(MaterialPageRoute(
-                              builder: (context) => UpdateCategoryScreen(
-                                id: categories[index].id,
-                                index: index,
-                                category: categories,
-                                nameController: categories[index].name,
-                              ),
-                            ));
-                          },
-                          child: ListTile(
-                            title: Text(categories[index].name),
+                    verticalOffset: 50.0,
+                    child: FadeInAnimation(
+                      child: Padding(
+                        padding: const EdgeInsets.all(10.0),
+                        child: Container(
+                          padding: const EdgeInsets.all(15),
+                          decoration: BoxDecoration(
+                              color: Theme.of(context)
+                                  .colorScheme
+                                  .primaryContainer,
+                              borderRadius: BorderRadius.circular(10)),
+                          child: InkWell(
+                            onTap: () {
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (context) => UpdateCategoryScreen(
+                                    id: categories[index].id,
+                                    index: index,
+                                    category: categories,
+                                    nameController: categories[index].name,
+                                  ),
+                                ),
+                              );
+                            },
+                            child: ListTile(
+                              title: Text(categories[index].name),
+                            ),
                           ),
                         ),
                       ),

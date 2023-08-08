@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:showcaseview/showcaseview.dart';
 
 import '/theme/theme_constants.dart';
 import 'screens/drawer_screen.dart';
@@ -62,7 +63,10 @@ class _MyAppState extends State<MyApp> {
         debugShowCheckedModeBanner: false,
         title: 'Flutter Expense Tracker App',
         theme: isDarkMode ? darkTheme : lighTheme,
-        home: const DrawerScreen(),
+        home: ShowCaseWidget(
+            builder: Builder(
+          builder: (context) => const DrawerScreen(),
+        )),
       ),
       designSize: const Size(400, 800),
     );

@@ -1,7 +1,9 @@
+import 'package:expense_tracker/widgets/showcase.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:hive_flutter/adapters.dart';
+import 'package:showcaseview/showcaseview.dart';
 
 import '/models/expense.dart';
 import '/models/category.dart';
@@ -18,6 +20,7 @@ class ExpensesScreen extends StatefulWidget {
 class _ExpensesScreenState extends State<ExpensesScreen> {
   late final Box expenseBox;
   late final Box categoryBox;
+  final GlobalKey globalKeyFirstItem = GlobalKey();
 
   @override
   void initState() {
@@ -25,10 +28,19 @@ class _ExpensesScreenState extends State<ExpensesScreen> {
     super.initState();
     expenseBox = Hive.box<Expense>('expenses');
     categoryBox = Hive.box<Category>('categories');
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ShowCaseWidget.of(context).startShowCase([globalKeyFirstItem]);
+    });
   }
 
-  _deleteExpense(int index) {
-    expenseBox.deleteAt(index);
+  _deleteExpense(int id) {
+    var expenses = expenseBox.values.toList();
+
+    for (int i = 0; i < expenses.length; i++) {
+      if (expenses[i].id == id) {
+        expenseBox.deleteAt(i);
+      }
+    }
 
     return ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
@@ -40,18 +52,14 @@ class _ExpensesScreenState extends State<ExpensesScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (context) => const AddExpenseScreen(),
-            ),
-          );
-        },
-        child: const Icon(Icons.add),
-      ),
-      body: ValueListenableBuilder(
+    Widget? content;
+
+    if (expenseBox.isEmpty) {
+      content = const Center(
+        child: Text('Please add some Expenses !'),
+      );
+    } else {
+      content = ValueListenableBuilder(
         valueListenable: expenseBox.listenable(),
         builder: (context, Box box, child) {
           Map<dynamic, dynamic> raw = box.toMap();
@@ -65,6 +73,94 @@ class _ExpensesScreenState extends State<ExpensesScreen> {
               itemBuilder: (context, index) {
                 Category category = categoryBox.values
                     .firstWhere((cat) => cat.id == expenses[index].categoryId);
+
+                if (index == 0) {
+                  return ShowcaseWidget(
+                    globalKey: globalKeyFirstItem,
+                    title: 'Update and Delete',
+                    desc: 'Touch to Update Expense, Slide To delete Expense',
+                    child: AnimationConfiguration.staggeredList(
+                      position: index,
+                      duration: const Duration(milliseconds: 375),
+                      child: SlideAnimation(
+                        verticalOffset: 50.0,
+                        child: FadeInAnimation(
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Stack(
+                              children: [
+                                Positioned.fill(
+                                  child: Builder(
+                                    builder: (context) => Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 10.0),
+                                      child: Container(color: Colors.red),
+                                    ),
+                                  ),
+                                ),
+                                Slidable(
+                                  endActionPane: ActionPane(
+                                    motion: const StretchMotion(),
+                                    children: [
+                                      SlidableAction(
+                                        onPressed: (context) =>
+                                            _deleteExpense(expenses[index].id),
+                                        icon: Icons.delete,
+                                        backgroundColor: Colors.red,
+                                        borderRadius: BorderRadius.circular(10),
+                                      ),
+                                    ],
+                                  ),
+                                  child: Container(
+                                    padding: const EdgeInsets.all(15),
+                                    decoration: BoxDecoration(
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .primaryContainer,
+                                        borderRadius:
+                                            BorderRadius.circular(10)),
+                                    child: InkWell(
+                                      onTap: () {
+                                        Navigator.of(context)
+                                            .push(MaterialPageRoute(
+                                          builder: (context) =>
+                                              UpdateExpenseScreeen(
+                                            id: expenses[index].id,
+                                            index: index,
+                                            expenseData: expenses,
+                                            name: expenses[index].name,
+                                            amount: expenses[index].amount,
+                                            date: expenses[index].date,
+                                          ),
+                                        ));
+                                      },
+                                      child: ListTile(
+                                        title: Text(expenses[index].name),
+                                        subtitle: Text(
+                                            expenses[index].amount.toString()),
+                                        trailing: Column(
+                                          children: [
+                                            Text(category.name),
+                                            const SizedBox(height: 5),
+                                            Text(
+                                              formatter
+                                                  .format(expenses[index].date),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  );
+                }
+
                 return AnimationConfiguration.staggeredList(
                   position: index,
                   duration: const Duration(milliseconds: 375),
@@ -90,7 +186,7 @@ class _ExpensesScreenState extends State<ExpensesScreen> {
                                 children: [
                                   SlidableAction(
                                     onPressed: (context) =>
-                                        _deleteExpense(index),
+                                        _deleteExpense(expenses[index].id),
                                     icon: Icons.delete,
                                     backgroundColor: Colors.red,
                                     borderRadius: BorderRadius.circular(10),
@@ -147,7 +243,21 @@ class _ExpensesScreenState extends State<ExpensesScreen> {
             ),
           );
         },
+      );
+    }
+
+    return Scaffold(
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) => const AddExpenseScreen(),
+            ),
+          );
+        },
+        child: const Icon(Icons.add),
       ),
+      body: content,
     );
   }
 }

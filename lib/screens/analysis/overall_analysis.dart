@@ -23,8 +23,8 @@ class _OverallAnalysisState extends State<OverallAnalysis> {
         enlargeFactor: 0.33,
       ),
       items: const [
-        Expanded(child: TableChart()),
-        Expanded(child: PieChart()),
+        TableChart(),
+        PieChart(),
       ],
     );
   }

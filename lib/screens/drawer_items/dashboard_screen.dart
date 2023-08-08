@@ -1,4 +1,6 @@
+import 'package:expense_tracker/widgets/showcase.dart';
 import 'package:flutter/material.dart';
+import 'package:showcaseview/showcaseview.dart';
 
 import '../analysis/last_month_analysis.dart';
 import '../analysis/overall_analysis.dart';
@@ -11,18 +13,25 @@ class DashboardScreen extends StatefulWidget {
 }
 
 class _DashboardScreenState extends State<DashboardScreen> {
+  final GlobalKey globalKeyTabBar = GlobalKey();
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ShowCaseWidget.of(context).startShowCase([globalKeyTabBar]);
+    });
+  }
+
   List tabs = [
     {
       'title': 'Overall',
-      'widget': const Expanded(
-        child: OverallAnalysis(),
-      ),
+      'widget': const OverallAnalysis(),
     },
     {
       'title': 'Last Month',
-      'widget': const Expanded(
-        child: LastMonthAnalysis(),
-      ),
+      'widget': const LastMonthAnalysis(),
     },
   ];
 
@@ -39,15 +48,20 @@ class _DashboardScreenState extends State<DashboardScreen> {
             children: [
               SizedBox(
                 height: 50,
-                child: TabBar(
-                  tabs: [
-                    Tab(
-                      text: tabs[0]['title'],
-                    ),
-                    Tab(
-                      text: tabs[1]['title'],
-                    ),
-                  ],
+                child: ShowcaseWidget(
+                  desc: 'Select overall analysis or last month analysis',
+                  title: 'Overall or Last month',
+                  globalKey: globalKeyTabBar,
+                  child: TabBar(
+                    tabs: [
+                      Tab(
+                        text: tabs[0]['title'],
+                      ),
+                      Tab(
+                        text: tabs[1]['title'],
+                      ),
+                    ],
+                  ),
                 ),
               ),
               Expanded(

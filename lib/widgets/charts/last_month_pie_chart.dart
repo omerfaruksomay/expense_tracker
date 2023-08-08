@@ -60,18 +60,30 @@ class _TableChartState extends State<LastMonthPieChart> {
 
   @override
   Widget build(BuildContext context) {
-    return SfCircularChart(
-      legend: const Legend(
-          isVisible: true,
-          overflowMode: LegendItemOverflowMode.wrap,
-          position: LegendPosition.left),
-      series: <CircularSeries>[
-        PieSeries<dynamic, dynamic>(
-          explode: true,
-          dataSource: _chartData,
-          xValueMapper: (data, index) => _chartData[index]['name'],
-          yValueMapper: (data, index) => _chartData[index]['amount'],
-          dataLabelSettings: const DataLabelSettings(isVisible: true),
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        const Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(Icons.arrow_left),
+            Text('Swipe Left to see Column chart')
+          ],
+        ),
+        SfCircularChart(
+          legend: const Legend(
+              isVisible: true,
+              overflowMode: LegendItemOverflowMode.wrap,
+              position: LegendPosition.left),
+          series: <CircularSeries>[
+            PieSeries<dynamic, dynamic>(
+              explode: true,
+              dataSource: _chartData,
+              xValueMapper: (data, index) => _chartData[index]['name'],
+              yValueMapper: (data, index) => _chartData[index]['amount'],
+              dataLabelSettings: const DataLabelSettings(isVisible: true),
+            ),
+          ],
         ),
       ],
     );

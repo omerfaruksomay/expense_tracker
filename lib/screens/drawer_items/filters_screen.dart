@@ -1,9 +1,11 @@
 import 'package:expense_tracker/models/category.dart';
 import 'package:expense_tracker/theme/theme_constants.dart';
+import 'package:expense_tracker/widgets/showcase.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:showcaseview/showcaseview.dart';
 
 import '../../models/expense.dart';
 
@@ -27,11 +29,16 @@ class _ToggleFilterState extends State<FilterScreen> {
   Category? _selectedCategory;
   Category? _filteredCategory;
 
+  final GlobalKey globalKeyFilters = GlobalKey();
+
   @override
   void initState() {
     super.initState();
     expenseBox = Hive.box<Expense>('expenses');
     categoryBox = Hive.box<Category>('categories');
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ShowCaseWidget.of(context).startShowCase([globalKeyFilters]);
+    });
   }
 
   _presentDatePicker() async {
@@ -73,21 +80,26 @@ class _ToggleFilterState extends State<FilterScreen> {
         child: Column(
           children: [
             const SizedBox(height: 25),
-            ToggleButtons(
-              borderRadius: const BorderRadius.all(Radius.circular(8)),
-              selectedBorderColor: Colors.deepPurple,
-              fillColor: primaryColor,
-              selectedColor: Colors.white,
-              direction: Axis.horizontal,
-              onPressed: (index) {
-                setState(() {
-                  _selectedFilters[index] = !_selectedFilters[index];
-                });
-              },
-              isSelected: _selectedFilters,
-              children: filters,
+            ShowcaseWidget(
+              title: 'Filters',
+              desc: 'select the filters you want to apply',
+              globalKey: globalKeyFilters,
+              child: ToggleButtons(
+                borderRadius: const BorderRadius.all(Radius.circular(8)),
+                selectedBorderColor: Colors.deepPurple,
+                fillColor: primaryColor,
+                selectedColor: Colors.white,
+                direction: Axis.horizontal,
+                onPressed: (index) {
+                  setState(() {
+                    _selectedFilters[index] = !_selectedFilters[index];
+                  });
+                },
+                isSelected: _selectedFilters,
+                children: filters,
+              ),
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 5),
             ValueListenableBuilder(
               valueListenable: expenseBox.listenable(),
               builder: (context, Box box, child) {

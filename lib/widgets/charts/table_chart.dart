@@ -71,42 +71,39 @@ class _TableChartState extends State<TableChart> {
   Widget build(BuildContext context) {
     List<List<dynamic>> groupedChartData = _groupedChartData(_chartData);
     print(groupedChartData);
-    return Expanded(
-      child: Column(
-        children: [
-          SizedBox(height: 15),
-          const Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text('Swipe right to see pie chart'),
-              Icon(Icons.arrow_right),
-            ],
+    return Column(
+      children: [
+        SizedBox(height: 15),
+        const Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text('Swipe right to see pie chart'),
+            Icon(Icons.arrow_right),
+          ],
+        ),
+        const SizedBox(height: 15),
+        Expanded(
+          child: ListView.builder(
+            itemCount: groupedChartData.length,
+            itemBuilder: (context, index) {
+              final chartData = groupedChartData[index];
+              return SfCartesianChart(
+                primaryXAxis: CategoryAxis(),
+                primaryYAxis: NumericAxis(),
+                series: <ChartSeries>[
+                  ColumnSeries(
+                    color: primaryColor,
+                    dataSource: chartData,
+                    xValueMapper: (data, _) => data['name'].toString(),
+                    yValueMapper: (data, _) => data['amount'],
+                    dataLabelSettings: const DataLabelSettings(isVisible: true),
+                  ),
+                ],
+              );
+            },
           ),
-          const SizedBox(height: 15),
-          Expanded(
-            child: ListView.builder(
-              itemCount: groupedChartData.length,
-              itemBuilder: (context, index) {
-                final chartData = groupedChartData[index];
-                return SfCartesianChart(
-                  primaryXAxis: CategoryAxis(),
-                  primaryYAxis: NumericAxis(),
-                  series: <ChartSeries>[
-                    ColumnSeries(
-                      color: primaryColor,
-                      dataSource: chartData,
-                      xValueMapper: (data, _) => data['name'].toString(),
-                      yValueMapper: (data, _) => data['amount'],
-                      dataLabelSettings:
-                          const DataLabelSettings(isVisible: true),
-                    ),
-                  ],
-                );
-              },
-            ),
-          ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }
