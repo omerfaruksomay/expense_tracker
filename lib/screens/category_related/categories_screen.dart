@@ -25,9 +25,6 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
     // TODO: implement initState
     super.initState();
     categoryBox = Hive.box<Category>('categories');
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      ShowCaseWidget.of(context).startShowCase([globalKey]);
-    });
   }
 
   @override

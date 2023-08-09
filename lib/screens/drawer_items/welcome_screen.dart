@@ -22,9 +22,6 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      ShowCaseWidget.of(context).startShowCase([globalKeyAddButton]);
-    });
   }
 
   @override
@@ -39,20 +36,15 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
               style: TextStyle(fontSize: 22.sp),
             ),
           ),
-          ShowcaseWidget(
-            desc: 'Touch to add some Expense',
-            title: 'Add expense',
-            globalKey: globalKeyAddButton,
-            child: TextButton(
-              onPressed: () {
-                Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => const AddExpenseScreen(),
-                ));
-              },
-              child: Text(
-                addExpenseButtonText,
-                style: TextStyle(fontSize: 15.sp),
-              ),
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => const AddExpenseScreen(),
+              ));
+            },
+            child: Text(
+              addExpenseButtonText,
+              style: TextStyle(fontSize: 15.sp),
             ),
           ),
         ],

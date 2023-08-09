@@ -36,9 +36,6 @@ class _ToggleFilterState extends State<FilterScreen> {
     super.initState();
     expenseBox = Hive.box<Expense>('expenses');
     categoryBox = Hive.box<Category>('categories');
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      ShowCaseWidget.of(context).startShowCase([globalKeyFilters]);
-    });
   }
 
   _presentDatePicker() async {
@@ -80,24 +77,19 @@ class _ToggleFilterState extends State<FilterScreen> {
         child: Column(
           children: [
             const SizedBox(height: 25),
-            ShowcaseWidget(
-              title: 'Filters',
-              desc: 'select the filters you want to apply',
-              globalKey: globalKeyFilters,
-              child: ToggleButtons(
-                borderRadius: const BorderRadius.all(Radius.circular(8)),
-                selectedBorderColor: Colors.deepPurple,
-                fillColor: primaryColor,
-                selectedColor: Colors.white,
-                direction: Axis.horizontal,
-                onPressed: (index) {
-                  setState(() {
-                    _selectedFilters[index] = !_selectedFilters[index];
-                  });
-                },
-                isSelected: _selectedFilters,
-                children: filters,
-              ),
+            ToggleButtons(
+              borderRadius: const BorderRadius.all(Radius.circular(8)),
+              selectedBorderColor: Colors.deepPurple,
+              fillColor: primaryColor,
+              selectedColor: Colors.white,
+              direction: Axis.horizontal,
+              onPressed: (index) {
+                setState(() {
+                  _selectedFilters[index] = !_selectedFilters[index];
+                });
+              },
+              isSelected: _selectedFilters,
+              children: filters,
             ),
             const SizedBox(height: 5),
             ValueListenableBuilder(

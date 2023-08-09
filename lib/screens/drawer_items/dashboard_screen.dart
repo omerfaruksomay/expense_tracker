@@ -19,9 +19,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      ShowCaseWidget.of(context).startShowCase([globalKeyTabBar]);
-    });
   }
 
   List tabs = [
@@ -48,20 +45,15 @@ class _DashboardScreenState extends State<DashboardScreen> {
             children: [
               SizedBox(
                 height: 50,
-                child: ShowcaseWidget(
-                  desc: 'Select overall analysis or last month analysis',
-                  title: 'Overall or Last month',
-                  globalKey: globalKeyTabBar,
-                  child: TabBar(
-                    tabs: [
-                      Tab(
-                        text: tabs[0]['title'],
-                      ),
-                      Tab(
-                        text: tabs[1]['title'],
-                      ),
-                    ],
-                  ),
+                child: TabBar(
+                  tabs: [
+                    Tab(
+                      text: tabs[0]['title'],
+                    ),
+                    Tab(
+                      text: tabs[1]['title'],
+                    ),
+                  ],
                 ),
               ),
               Expanded(

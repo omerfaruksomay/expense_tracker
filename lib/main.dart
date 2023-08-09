@@ -1,3 +1,4 @@
+import 'package:expense_tracker/screens/onbarding_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -16,6 +17,7 @@ void main() async {
   //box
   var expenseBox = await Hive.openBox<Expense>('expenses');
   var catBox = await Hive.openBox<Category>('categories');
+  var settingsBox = await Hive.openBox('launch');
   await Hive.openBox('themeBox');
 
   if (catBox.isEmpty) {
@@ -25,12 +27,23 @@ void main() async {
     expenseBox.addAll(dummyExpenses);
   }
 
-  runApp(const MyApp());
+  bool firstLaunch = settingsBox.get('firstLaunch') ?? true;
+
+  runApp(MyApp(
+    firstLaunch: firstLaunch,
+    settingsBox: settingsBox,
+  ));
 }
 
 class MyApp extends StatefulWidget {
-  const MyApp({super.key});
+  const MyApp({
+    super.key,
+    required this.firstLaunch,
+    required this.settingsBox,
+  });
 
+  final bool firstLaunch;
+  final Box settingsBox;
   @override
   State<MyApp> createState() => _MyAppState();
 }
@@ -63,10 +76,7 @@ class _MyAppState extends State<MyApp> {
         debugShowCheckedModeBanner: false,
         title: 'Flutter Expense Tracker App',
         theme: isDarkMode ? darkTheme : lighTheme,
-        home: ShowCaseWidget(
-            builder: Builder(
-          builder: (context) => const DrawerScreen(),
-        )),
+        home: const OnbardingScreen(),
       ),
       designSize: const Size(400, 800),
     );
