@@ -76,9 +76,16 @@ class _MyAppState extends State<MyApp> {
         debugShowCheckedModeBanner: false,
         title: 'Flutter Expense Tracker App',
         theme: isDarkMode ? darkTheme : lighTheme,
-        home: const OnbardingScreen(),
+        home:
+            widget.firstLaunch ? const OnbardingScreen() : const DrawerScreen(),
       ),
       designSize: const Size(400, 800),
     );
   }
 }
+
+//var olan ad tekrar eklenemesin -> validation
+//category silme defaultlar silinmeyecek.
+//Eklenen kategoriler silinebilecek. 
+//Onboard screen ss ler kontrol edilecek.
+//showcase view yapılacak.
