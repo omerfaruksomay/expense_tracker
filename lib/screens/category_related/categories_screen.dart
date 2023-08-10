@@ -165,12 +165,26 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                               child: Container(
                                 padding: const EdgeInsets.all(15),
                                 decoration: BoxDecoration(
-                                    color: Theme.of(context)
-                                        .colorScheme
-                                        .primaryContainer,
-                                    borderRadius: BorderRadius.circular(10)),
+                                  color: Theme.of(context)
+                                      .colorScheme
+                                      .primaryContainer,
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
                                 child: InkWell(
-                                  onTap: () {},
+                                  onTap: () {
+                                    Navigator.of(context).push(
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            UpdateCategoryScreen(
+                                          id: categories[index].id,
+                                          index: index,
+                                          category: categories,
+                                          nameController:
+                                              categories[index].name,
+                                        ),
+                                      ),
+                                    );
+                                  },
                                   child: ListTile(
                                     title: Text(categories[index].name),
                                   ),
@@ -191,14 +205,3 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
     );
   }
 }
-
-                            // Navigator.of(context).push(
-                            //   MaterialPageRoute(
-                            //     builder: (context) => UpdateCategoryScreen(
-                            //       id: categories[index].id,
-                            //       index: index,
-                            //       category: categories,
-                            //       nameController: categories[index].name,
-                            //     ),
-                            //   ),
-                            // );
