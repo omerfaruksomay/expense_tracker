@@ -15,7 +15,7 @@ void main() async {
   Hive.registerAdapter(ExpenseAdapter());
   Hive.registerAdapter(CategoryAdapter());
   //box
-  var expenseBox = await Hive.openBox<Expense>('expenses');
+  await Hive.openBox<Expense>('expenses');
   var catBox = await Hive.openBox<Category>('categories');
   var settingsBox = await Hive.openBox('launch');
   await Hive.openBox('themeBox');
@@ -23,9 +23,9 @@ void main() async {
   if (catBox.isEmpty) {
     catBox.addAll(defaultCategories);
   }
-  if (expenseBox.isEmpty) {
-    expenseBox.addAll(dummyExpenses);
-  }
+  // if (expenseBox.isEmpty) {
+  //   expenseBox.addAll(dummyExpenses);
+  // }
 
   bool firstLaunch = settingsBox.get('firstLaunch') ?? true;
 
@@ -84,8 +84,6 @@ class _MyAppState extends State<MyApp> {
   }
 }
 
-//var olan ad tekrar eklenemesin -> validation
-//category silme defaultlar silinmeyecek.
-//Eklenen kategoriler silinebilecek. 
+
 //Onboard screen ss ler kontrol edilecek.
 //showcase view yapılacak.

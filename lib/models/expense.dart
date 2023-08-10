@@ -31,14 +31,6 @@ class Expense {
   }
 }
 
-class ChartData {
-  final int categoryId;
-  final num amount;
-  final String categoryName;
-
-  ChartData(this.categoryId, this.amount, this.categoryName);
-}
-
 //dummy data
 
 List<Expense> dummyExpenses = [

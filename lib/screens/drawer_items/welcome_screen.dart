@@ -30,6 +30,10 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
+          Image.asset(
+            'assets/images/welcome_icon.png',
+            height: 300,
+          ),
           SizedBox(
             child: Text(
               welcomeMessage,

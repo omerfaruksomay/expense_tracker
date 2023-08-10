@@ -13,7 +13,7 @@ class SettingsScreen extends StatefulWidget {
 //todo-> tarih formatı
 
 class _SettingsScreenState extends State<SettingsScreen> {
-  String placeHolder = 'Expense Tracker Settings';
+  String text = 'Expense Tracker Settings';
 
   final themeBox = Hive.box('themeBox');
 
@@ -26,9 +26,17 @@ class _SettingsScreenState extends State<SettingsScreen> {
           Container(
             margin: const EdgeInsets.only(top: 150),
             child: Center(
-              child: Text(
-                placeHolder,
-                style: const TextStyle(fontSize: 30),
+              child: Column(
+                children: [
+                  Image.asset(
+                    'assets/images/welcome_icon.png',
+                    height: 250,
+                  ),
+                  Text(
+                    text,
+                    style: const TextStyle(fontSize: 30),
+                  ),
+                ],
               ),
             ),
           ),

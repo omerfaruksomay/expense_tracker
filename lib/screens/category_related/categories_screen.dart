@@ -1,9 +1,11 @@
 import 'package:expense_tracker/widgets/showcase.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:showcaseview/showcaseview.dart';
 
+import '../../models/expense.dart';
 import '/models/category.dart';
 import 'add_category.dart';
 import '/screens/category_related/update_category.dart';
@@ -17,6 +19,7 @@ class CategoriesScreen extends StatefulWidget {
 
 class _CategoriesScreenState extends State<CategoriesScreen> {
   late final Box categoryBox;
+  late final Box expenseBox;
 
   final GlobalKey globalKey = GlobalKey();
 
@@ -25,6 +28,72 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
     // TODO: implement initState
     super.initState();
     categoryBox = Hive.box<Category>('categories');
+    expenseBox = Hive.box<Expense>('expenses');
+  }
+
+  void _deleteExpensesByCategoryId(int categoryId) {
+    final expensesToDelete = <int>[];
+
+    for (var i = 0; i < expenseBox.length; i++) {
+      final expense = expenseBox.getAt(i) as Expense;
+      if (expense.categoryId == categoryId) {
+        expensesToDelete.add(i);
+      }
+    }
+
+    for (var index in expensesToDelete.reversed) {
+      expenseBox.deleteAt(index);
+    }
+  }
+
+  void _deleteCategoryAndExpenses(int index) {
+    categoryBox.deleteAt(index);
+    _deleteExpensesByCategoryId(index);
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        duration: Duration(seconds: 3),
+        content: Text('Category and associated expenses deleted!'),
+      ),
+    );
+  }
+
+  _deleteCategory(int index) async {
+    if (index <= 4) {
+      return ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          duration: Duration(seconds: 3),
+          content: Text('Default categories cannot be deleted!'),
+        ),
+      );
+    }
+
+    final isConfirmed = await _showDeleteConfirmationDialog();
+    if (isConfirmed) {
+      _deleteCategoryAndExpenses(index);
+    }
+  }
+
+  Future<bool> _showDeleteConfirmationDialog() async {
+    return await showDialog<bool>(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: const Text('Delete Category'),
+            content: const Text(
+                'Deleting this category will also delete its associated expenses. Are you sure?'),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(false),
+                child: const Text('Cancel'),
+              ),
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(true),
+                child: const Text('Delete'),
+              ),
+            ],
+          ),
+        ) ??
+        false;
   }
 
   @override
@@ -68,31 +137,47 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                     verticalOffset: 50.0,
                     child: FadeInAnimation(
                       child: Padding(
-                        padding: const EdgeInsets.all(10.0),
-                        child: Container(
-                          padding: const EdgeInsets.all(15),
-                          decoration: BoxDecoration(
-                              color: Theme.of(context)
-                                  .colorScheme
-                                  .primaryContainer,
-                              borderRadius: BorderRadius.circular(10)),
-                          child: InkWell(
-                            onTap: () {
-                              Navigator.of(context).push(
-                                MaterialPageRoute(
-                                  builder: (context) => UpdateCategoryScreen(
-                                    id: categories[index].id,
-                                    index: index,
-                                    category: categories,
-                                    nameController: categories[index].name,
+                        padding: const EdgeInsets.all(8.0),
+                        child: Stack(
+                          children: [
+                            Positioned.fill(
+                              child: Builder(
+                                builder: (context) => Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 10.0),
+                                  child: Container(color: Colors.red),
+                                ),
+                              ),
+                            ),
+                            Slidable(
+                              endActionPane: ActionPane(
+                                motion: const StretchMotion(),
+                                children: [
+                                  SlidableAction(
+                                    onPressed: (context) =>
+                                        _deleteCategory(categories[index].id),
+                                    icon: Icons.delete,
+                                    backgroundColor: Colors.red,
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                ],
+                              ),
+                              child: Container(
+                                padding: const EdgeInsets.all(15),
+                                decoration: BoxDecoration(
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .primaryContainer,
+                                    borderRadius: BorderRadius.circular(10)),
+                                child: InkWell(
+                                  onTap: () {},
+                                  child: ListTile(
+                                    title: Text(categories[index].name),
                                   ),
                                 ),
-                              );
-                            },
-                            child: ListTile(
-                              title: Text(categories[index].name),
+                              ),
                             ),
-                          ),
+                          ],
                         ),
                       ),
                     ),
@@ -106,3 +191,14 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
     );
   }
 }
+
+                            // Navigator.of(context).push(
+                            //   MaterialPageRoute(
+                            //     builder: (context) => UpdateCategoryScreen(
+                            //       id: categories[index].id,
+                            //       index: index,
+                            //       category: categories,
+                            //       nameController: categories[index].name,
+                            //     ),
+                            //   ),
+                            // );

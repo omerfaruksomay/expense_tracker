@@ -26,20 +26,45 @@ class _AddCategoryScreenState extends State<AddCategoryScreen> {
 
   void _addCategory() {
     if (_formKey.currentState!.validate()) {
-      final int id = categoryBox.length;
-      final newCategory = Category(
-        id: id,
-        name: _nameController.text,
-      );
-      categoryBox.add(newCategory);
-      Navigator.pop(context);
+      final String categoryName = _nameController.text;
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Category Added!'),
-        ),
-      );
+      bool categoryExists = false;
+      for (final category in categoryBox.values) {
+        if (category.name.toLowerCase() == categoryName.toLowerCase()) {
+          categoryExists = true;
+          break;
+        }
+      }
+
+      if (!categoryExists) {
+        final int id = categoryBox.length;
+        final newCategory = Category(
+          id: id,
+          name: categoryName,
+        );
+        categoryBox.add(newCategory);
+        Navigator.pop(context);
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Category Added!'),
+          ),
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Category already exists!'),
+          ),
+        );
+      }
     }
+  }
+
+  String? _fieldValidator(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'Field can\'t be empty';
+    }
+    return null;
   }
 
   @override
@@ -59,12 +84,7 @@ class _AddCategoryScreenState extends State<AddCategoryScreen> {
                 decoration: const InputDecoration(
                   labelText: 'Category name',
                 ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter a category name';
-                  }
-                  return null;
-                },
+                validator: _fieldValidator,
               ),
               const SizedBox(height: 15),
               Row(

@@ -34,13 +34,12 @@ class _OnbardingScreenState extends State<OnbardingScreen> {
     _pageController.nextPage(
         duration: const Duration(milliseconds: 300), curve: Curves.ease);
     if (_pageIndex == onboardItems.length - 1) {
-      await settingsBox.put(
-          'firstLaunch', false); // firstLaunch değerini false yap
+      await settingsBox.put('firstLaunch', false);
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
           builder: (context) => DrawerScreen(),
-        ), // DrawerScreen'e geçiş yap
+        ),
       );
     }
   }
@@ -183,7 +182,7 @@ class OnboardItem {
 
 final List<OnboardItem> onboardItems = [
   OnboardItem(
-    image: 'assets/images/welcome_icon.jpeg',
+    image: 'assets/images/welcome_icon.png',
     title: 'Welcome To Expense Tracker!',
     height: 300,
     desc:

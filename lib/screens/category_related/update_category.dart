@@ -35,20 +35,40 @@ class _UpdateCategoryScreenState extends State<UpdateCategoryScreen> {
   }
 
   _updateCategory() {
-    final id = widget.id;
+    if (_categoryFormKey.currentState!.validate()) {
+      final String categoryName = _nameController.text;
 
-    Category updatedCategory = Category(
-      id: id,
-      name: _nameController.text,
-    );
+      bool categoryExists = false;
+      for (final category in categoryBox.values) {
+        if (category.name.toLowerCase() == categoryName.toLowerCase()) {
+          categoryExists = true;
+          break;
+        }
+      }
 
-    categoryBox.putAt(widget.index, updatedCategory);
+      if (!categoryExists) {
+        final int id = widget.id;
+        final updatedCategory = Category(
+          id: id,
+          name: categoryName,
+        );
+        categoryBox.putAt(widget.index, updatedCategory);
 
-    return ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Category Updated !'),
-      ),
-    );
+        Navigator.of(context).pop();
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Category Updated!'),
+          ),
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Category already exists!'),
+          ),
+        );
+      }
+    }
   }
 
   String? _fieldValidator(String? value) {
@@ -98,8 +118,6 @@ class _UpdateCategoryScreenState extends State<UpdateCategoryScreen> {
                     onPressed: () {
                       if (_categoryFormKey.currentState!.validate()) {
                         _updateCategory();
-
-                        Navigator.of(context).pop();
                       }
                     },
                     child: const Text('Save'),

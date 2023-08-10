@@ -61,7 +61,7 @@ class _TableChartState extends State<LastMonthTableChart> {
 
   List<List<dynamic>> _groupedChartData(List<dynamic> chartData) {
     List<List<dynamic>> groupedCharts = [];
-    const int groupSize = 4;
+    const int groupSize = 3;
 
     for (var i = 0; i < chartData.length; i += groupSize) {
       if (i + groupSize > chartData.length) {
