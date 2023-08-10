@@ -30,7 +30,8 @@ class _AddCategoryScreenState extends State<AddCategoryScreen> {
 
       bool categoryExists = false;
       for (final category in categoryBox.values) {
-        if (category.name.toLowerCase() == categoryName.toLowerCase()) {
+        if (category.name.trim().toLowerCase() ==
+            categoryName.trim().toLowerCase()) {
           categoryExists = true;
           break;
         }

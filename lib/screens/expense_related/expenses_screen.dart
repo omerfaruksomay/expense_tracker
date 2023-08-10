@@ -4,6 +4,7 @@ import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:showcaseview/showcaseview.dart';
 
+import '../../widgets/showcase.dart';
 import '/models/expense.dart';
 import '/models/category.dart';
 import 'add_expense.dart';
@@ -20,12 +21,17 @@ class _ExpensesScreenState extends State<ExpensesScreen> {
   late final Box expenseBox;
   late final Box categoryBox;
 
+  final GlobalKey globalKeyFirstItem = GlobalKey();
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     expenseBox = Hive.box<Expense>('expenses');
     categoryBox = Hive.box<Category>('categories');
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ShowCaseWidget.of(context).startShowCase([globalKeyFirstItem]);
+    });
   }
 
   _deleteExpense(int id) {
@@ -68,6 +74,93 @@ class _ExpensesScreenState extends State<ExpensesScreen> {
               itemBuilder: (context, index) {
                 Category category = categoryBox.values
                     .firstWhere((cat) => cat.id == expenses[index].categoryId);
+
+                // if (index == 0) {
+                //   return ShowcaseWidget(
+                //     globalKey: globalKeyFirstItem,
+                //     title: 'Update and Delete',
+                //     desc: 'Touch to Update Expense, Slide To delete Expense',
+                //     child: AnimationConfiguration.staggeredList(
+                //       position: index,
+                //       duration: const Duration(milliseconds: 375),
+                //       child: SlideAnimation(
+                //         verticalOffset: 50.0,
+                //         child: FadeInAnimation(
+                //           child: Padding(
+                //             padding: const EdgeInsets.all(8.0),
+                //             child: Stack(
+                //               children: [
+                //                 Positioned.fill(
+                //                   child: Builder(
+                //                     builder: (context) => Padding(
+                //                       padding: const EdgeInsets.symmetric(
+                //                           horizontal: 10.0),
+                //                       child: Container(color: Colors.red),
+                //                     ),
+                //                   ),
+                //                 ),
+                //                 Slidable(
+                //                   endActionPane: ActionPane(
+                //                     motion: const StretchMotion(),
+                //                     children: [
+                //                       SlidableAction(
+                //                         onPressed: (context) =>
+                //                             _deleteExpense(expenses[index].id),
+                //                         icon: Icons.delete,
+                //                         backgroundColor: Colors.red,
+                //                         borderRadius: BorderRadius.circular(10),
+                //                       ),
+                //                     ],
+                //                   ),
+                //                   child: Container(
+                //                     padding: const EdgeInsets.all(15),
+                //                     decoration: BoxDecoration(
+                //                         color: Theme.of(context)
+                //                             .colorScheme
+                //                             .primaryContainer,
+                //                         borderRadius:
+                //                             BorderRadius.circular(10)),
+                //                     child: InkWell(
+                //                       onTap: () {
+                //                         Navigator.of(context)
+                //                             .push(MaterialPageRoute(
+                //                           builder: (context) =>
+                //                               UpdateExpenseScreeen(
+                //                             id: expenses[index].id,
+                //                             index: index,
+                //                             expenseData: expenses,
+                //                             name: expenses[index].name,
+                //                             amount: expenses[index].amount,
+                //                             date: expenses[index].date,
+                //                           ),
+                //                         ));
+                //                       },
+                //                       child: ListTile(
+                //                         title: Text(expenses[index].name),
+                //                         subtitle: Text(
+                //                             expenses[index].amount.toString()),
+                //                         trailing: Column(
+                //                           children: [
+                //                             Text(category.name),
+                //                             const SizedBox(height: 5),
+                //                             Text(
+                //                               formatter
+                //                                   .format(expenses[index].date),
+                //                             ),
+                //                           ],
+                //                         ),
+                //                       ),
+                //                     ),
+                //                   ),
+                //                 ),
+                //               ],
+                //             ),
+                //           ),
+                //         ),
+                //       ),
+                //     ),
+                //   );
+                // }
 
                 return AnimationConfiguration.staggeredList(
                   position: index,

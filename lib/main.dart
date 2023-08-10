@@ -76,14 +76,17 @@ class _MyAppState extends State<MyApp> {
         debugShowCheckedModeBanner: false,
         title: 'Flutter Expense Tracker App',
         theme: isDarkMode ? darkTheme : lighTheme,
-        home:
-            widget.firstLaunch ? const OnbardingScreen() : const DrawerScreen(),
+        home: widget.firstLaunch
+            ? const OnbardingScreen()
+            : ShowCaseWidget(
+                builder: Builder(
+                  builder: (context) => const DrawerScreen(),
+                ),
+              ),
       ),
       designSize: const Size(400, 800),
     );
   }
 }
 
-
-//Onboard screen ss ler kontrol edilecek.
 //showcase view yapılacak.

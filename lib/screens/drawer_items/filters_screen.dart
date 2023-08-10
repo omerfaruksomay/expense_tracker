@@ -2,6 +2,7 @@ import 'package:expense_tracker/models/category.dart';
 import 'package:expense_tracker/theme/theme_constants.dart';
 import 'package:expense_tracker/widgets/showcase.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -36,6 +37,9 @@ class _ToggleFilterState extends State<FilterScreen> {
     super.initState();
     expenseBox = Hive.box<Expense>('expenses');
     categoryBox = Hive.box<Category>('categories');
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ShowCaseWidget.of(context).startShowCase([globalKeyFilters]);
+    });
   }
 
   _presentDatePicker() async {
@@ -171,10 +175,14 @@ class _ToggleFilterState extends State<FilterScreen> {
                 }
 
                 if (box.isEmpty) {
-                  return const Center(
-                    child: Text(
-                      'Add Some Expenses !',
-                      style: TextStyle(fontWeight: FontWeight.bold),
+                  return Center(
+                    child: Container(
+                      margin: EdgeInsets.only(
+                        top: 0.7.sw,
+                      ),
+                      child: const Text(
+                        'Please add Some Expenses !',
+                      ),
                     ),
                   );
                 } else {

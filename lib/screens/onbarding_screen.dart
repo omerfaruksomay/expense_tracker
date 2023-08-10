@@ -137,21 +137,25 @@ class OnboardContent extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        const Spacer(),
-        Image.asset(
-          image,
-          height: height,
+        Expanded(
+          child: Image.asset(
+            image,
+            height: height,
+          ),
         ),
-        const Spacer(),
+        SizedBox(
+          height: 20,
+        ),
         Text(
           title,
           textAlign: TextAlign.center,
           style: Theme.of(context).textTheme.headlineLarge!.copyWith(
                 fontWeight: FontWeight.w500,
+                fontSize: 24,
               ),
         ),
         const SizedBox(
-          height: 16,
+          height: 8,
         ),
         Container(
           margin: const EdgeInsetsDirectional.symmetric(horizontal: 10),
@@ -162,7 +166,7 @@ class OnboardContent extends StatelessWidget {
                 fontWeight: FontWeight.normal, color: Colors.grey[500]),
           ),
         ),
-        const Spacer(),
+        const SizedBox(height: 40),
       ],
     );
   }

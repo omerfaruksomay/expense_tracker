@@ -10,8 +10,6 @@ class SettingsScreen extends StatefulWidget {
   State<SettingsScreen> createState() => _SettingsScreenState();
 }
 
-//todo-> tarih formatı
-
 class _SettingsScreenState extends State<SettingsScreen> {
   String text = 'Expense Tracker Settings';
 
