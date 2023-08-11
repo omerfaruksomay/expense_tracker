@@ -15,7 +15,7 @@ void main() async {
   Hive.registerAdapter(ExpenseAdapter());
   Hive.registerAdapter(CategoryAdapter());
   //box
-  await Hive.openBox<Expense>('expenses');
+  var expenseBox = await Hive.openBox<Expense>('expenses');
   var catBox = await Hive.openBox<Category>('categories');
   var settingsBox = await Hive.openBox('launch');
   await Hive.openBox('themeBox');
@@ -23,9 +23,9 @@ void main() async {
   if (catBox.isEmpty) {
     catBox.addAll(defaultCategories);
   }
-  // if (expenseBox.isEmpty) {
-  //   expenseBox.addAll(dummyExpenses);
-  // }
+  if (expenseBox.isEmpty) {
+    expenseBox.addAll(dummyExpenses);
+  }
 
   bool firstLaunch = settingsBox.get('firstLaunch') ?? true;
 
@@ -88,5 +88,3 @@ class _MyAppState extends State<MyApp> {
     );
   }
 }
-
-//showcase view yapılacak.

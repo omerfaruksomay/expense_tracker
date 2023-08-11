@@ -1,6 +1,7 @@
 import 'package:expense_tracker/theme/theme_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:showcaseview/showcaseview.dart';
 
 import 'drawer_items/dashboard_screen.dart';
 import 'drawer_items/filters_screen.dart';
@@ -42,31 +43,51 @@ class _DrawerScreenState extends State<DrawerScreen> {
       'title': 'Welcome',
       'icon': Icons.home,
       'index': 0,
-      'widget': WelcomeScreen(key: UniqueKey()),
+      'widget': ShowCaseWidget(
+        builder: Builder(
+          builder: (context) => WelcomeScreen(key: UniqueKey()),
+        ),
+      ),
     },
     {
       'title': 'Dashboard',
       'icon': Icons.dashboard,
       'index': 1,
-      'widget': DashboardScreen(key: UniqueKey()),
+      'widget': ShowCaseWidget(
+        builder: Builder(
+          builder: (context) => DashboardScreen(key: UniqueKey()),
+        ),
+      ),
     },
     {
       'title': 'Expenses',
       'icon': Icons.attach_money,
       'index': 2,
-      'widget': ExpensesScreen(key: UniqueKey()),
+      'widget': ShowCaseWidget(
+        builder: Builder(
+          builder: (context) => ExpensesScreen(key: UniqueKey()),
+        ),
+      ),
     },
     {
       'title': 'Filters',
       'icon': Icons.search,
       'index': 3,
-      'widget': FilterScreen(key: UniqueKey()),
+      'widget': ShowCaseWidget(
+        builder: Builder(
+          builder: (context) => FilterScreen(key: UniqueKey()),
+        ),
+      ),
     },
     {
       'title': 'Settings',
       'icon': Icons.settings,
       'index': 4,
-      'widget': SettingsScreen(key: UniqueKey()),
+      'widget': ShowCaseWidget(
+        builder: Builder(
+          builder: (context) => SettingsScreen(key: UniqueKey()),
+        ),
+      ),
     },
   ];
 

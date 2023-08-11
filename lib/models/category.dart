@@ -23,4 +23,5 @@ List<Category> defaultCategories = [
   Category(id: 2, name: 'Education'),
   Category(id: 3, name: 'Transportation'),
   Category(id: 4, name: 'Entertainment'),
+  Category(id: 5, name: 'Holiday')
 ];

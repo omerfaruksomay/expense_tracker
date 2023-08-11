@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:showcaseview/showcaseview.dart';
 
 import '../category_related/categories_screen.dart';
 
@@ -45,9 +46,15 @@ class _SettingsScreenState extends State<SettingsScreen> {
             child: Center(
               child: ElevatedButton(
                 onPressed: () {
-                  Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => const CategoriesScreen(),
-                  ));
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => ShowCaseWidget(
+                        builder: Builder(
+                          builder: (context) => const CategoriesScreen(),
+                        ),
+                      ),
+                    ),
+                  );
                 },
                 child: const Row(
                   children: [

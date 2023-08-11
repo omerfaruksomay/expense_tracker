@@ -20,6 +20,7 @@ class FilterScreen extends StatefulWidget {
 class _ToggleFilterState extends State<FilterScreen> {
   late final Box<Expense> expenseBox;
   late final Box<Category> categoryBox;
+  late final Box settingsBox;
 
   String? expenseName;
   final TextEditingController _nameContoller = TextEditingController();
@@ -37,6 +38,7 @@ class _ToggleFilterState extends State<FilterScreen> {
     super.initState();
     expenseBox = Hive.box<Expense>('expenses');
     categoryBox = Hive.box<Category>('categories');
+    settingsBox = Hive.box('launch');
     WidgetsBinding.instance.addPostFrameCallback((_) {
       ShowCaseWidget.of(context).startShowCase([globalKeyFilters]);
     });
@@ -76,25 +78,57 @@ class _ToggleFilterState extends State<FilterScreen> {
 
   @override
   Widget build(BuildContext context) {
+    bool isFirstLaunchFiltersScreen =
+        settingsBox.get('isFirstLaunchFiltersScreen') ?? true;
+
+    Widget content = Center();
+
+    if (isFirstLaunchFiltersScreen) {
+      content = ShowcaseWidget(
+        title: 'Filters',
+        desc: 'select the filters you want to apply',
+        globalKey: globalKeyFilters,
+        onClick: () async {
+          await settingsBox.put('isFirstLaunchFiltersScreen', false);
+        },
+        child: ToggleButtons(
+          borderRadius: const BorderRadius.all(Radius.circular(8)),
+          selectedBorderColor: Colors.deepPurple,
+          fillColor: primaryColor,
+          selectedColor: Colors.white,
+          direction: Axis.horizontal,
+          onPressed: (index) {
+            setState(() {
+              _selectedFilters[index] = !_selectedFilters[index];
+            });
+          },
+          isSelected: _selectedFilters,
+          children: filters,
+        ),
+      );
+    } else {
+      content = ToggleButtons(
+        borderRadius: const BorderRadius.all(Radius.circular(8)),
+        selectedBorderColor: Colors.deepPurple,
+        fillColor: primaryColor,
+        selectedColor: Colors.white,
+        direction: Axis.horizontal,
+        onPressed: (index) {
+          setState(() {
+            _selectedFilters[index] = !_selectedFilters[index];
+          });
+        },
+        isSelected: _selectedFilters,
+        children: filters,
+      );
+    }
+
     return Scaffold(
       body: Center(
         child: Column(
           children: [
             const SizedBox(height: 25),
-            ToggleButtons(
-              borderRadius: const BorderRadius.all(Radius.circular(8)),
-              selectedBorderColor: Colors.deepPurple,
-              fillColor: primaryColor,
-              selectedColor: Colors.white,
-              direction: Axis.horizontal,
-              onPressed: (index) {
-                setState(() {
-                  _selectedFilters[index] = !_selectedFilters[index];
-                });
-              },
-              isSelected: _selectedFilters,
-              children: filters,
-            ),
+            content,
             const SizedBox(height: 5),
             ValueListenableBuilder(
               valueListenable: expenseBox.listenable(),
