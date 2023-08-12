@@ -32,7 +32,7 @@ class UpdateExpenseScreeenState extends State<UpdateExpenseScreeen> {
 
   late final TextEditingController _nameController;
 
-  late final TextEditingController _amaountController;
+  late final TextEditingController _amountController;
 
   DateTime? _selectedDate;
   String? _selectedCategory;
@@ -46,7 +46,7 @@ class UpdateExpenseScreeenState extends State<UpdateExpenseScreeen> {
     expenseBox = Hive.box<Expense>('expenses');
     categoryBox = Hive.box<Category>('categories');
     _nameController = TextEditingController(text: widget.name);
-    _amaountController = TextEditingController(text: widget.amount.toString());
+    _amountController = TextEditingController(text: widget.amount.toString());
     _selectedDate = widget.date;
   }
 
@@ -66,7 +66,7 @@ class UpdateExpenseScreeenState extends State<UpdateExpenseScreeen> {
 
   _updateExpense() {
     final int id = widget.id;
-    final enteredAmount = int.parse(_amaountController.text);
+    final enteredAmount = int.parse(_amountController.text);
     final int categoryId = categoryBox.values
         .firstWhere((category) => category.name == _selectedCategory)
         .id;
@@ -81,9 +81,9 @@ class UpdateExpenseScreeenState extends State<UpdateExpenseScreeen> {
 
     expenseBox.putAt(widget.index, updatedExpense);
 
-    return ScaffoldMessenger.of(context).showSnackBar(
+    ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
-        content: Text('Expesnse Updated!'),
+        content: Text('Expense Updated!'),
       ),
     );
   }
@@ -124,7 +124,7 @@ class UpdateExpenseScreeenState extends State<UpdateExpenseScreeen> {
                   ),
                   autocorrect: false,
                   keyboardType: TextInputType.number,
-                  controller: _amaountController,
+                  controller: _amountController,
                   validator: _fieldValidator,
                 ),
                 const SizedBox(height: 12),
